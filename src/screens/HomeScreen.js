@@ -37,11 +37,34 @@ const HomeScreen = ({ navigation }) => {
     }
   }, [courses, filterType, selectedSemester]);
 
-  // Función auxiliar para obtener el nombre del semestre según su ID
+  // Mejora la función para manejar mejor la ausencia del número de ciclo
   const getSemesterName = (semesterId) => {
     if (semesterId === 'all') return 'Todos los ciclos';
+    
     const semester = semesters.find(sem => sem.id === semesterId);
-    return semester ? `Ciclo ${semester.number} ${semester.year}` : 'Ciclo desconocido';
+    if (!semester) return 'Ciclo desconocido';
+    
+    // Intenta obtener el número del ciclo de diferentes propiedades
+    let cycleNumber;
+    
+    // Opción 1: Usa la propiedad number o semester si existe
+    if (semester.number !== undefined) {
+      cycleNumber = semester.number;
+    } else if (semester.semester !== undefined) {
+      cycleNumber = semester.semester;
+    } 
+    // Opción 2: Intenta extraer el número del nombre (si existe)
+    else if (semester.name && /\d+/.test(semester.name)) {
+      const match = semester.name.match(/\d+/);
+      if (match) cycleNumber = match[0];
+    }
+    // Opción 3: Usa el índice en el array + 1 como número de ciclo
+    else {
+      const index = semesters.findIndex(sem => sem.id === semesterId);
+      cycleNumber = index >= 0 ? (index + 1) : '?';
+    }
+    
+    return `Ciclo ${cycleNumber} ${semester.year || ''}`;
   };
 
   if (loading) {
@@ -103,26 +126,41 @@ const HomeScreen = ({ navigation }) => {
                   )}
                 </TouchableOpacity>
                 
-                {semesters.map(semester => (
-                  <TouchableOpacity 
-                    key={semester.id}
-                    style={[
-                      styles.semesterOption, 
-                      selectedSemester === semester.id && styles.activeSemesterOption
-                    ]} 
-                    onPress={() => {
-                      setSelectedSemester(semester.id);
-                      setShowSemesterModal(false);
-                    }}
-                  >
-                    <Text style={selectedSemester === semester.id ? styles.activeSemesterText : styles.semesterText}>
-                      Ciclo {semester.number} {semester.year}
-                    </Text>
-                    {selectedSemester === semester.id && (
-                      <Ionicons name="checkmark" size={20} color={colors.primary} />
-                    )}
-                  </TouchableOpacity>
-                ))}
+                {semesters.map((semester, index) => {
+                  // Calcula el número de ciclo con la misma lógica
+                  let cycleNumber;
+                  if (semester.number !== undefined) {
+                    cycleNumber = semester.number;
+                  } else if (semester.semester !== undefined) {
+                    cycleNumber = semester.semester;
+                  } else if (semester.name && /\d+/.test(semester.name)) {
+                    const match = semester.name.match(/\d+/);
+                    if (match) cycleNumber = match[0];
+                  } else {
+                    cycleNumber = index + 1; // Usa el índice como fallback
+                  }
+                  
+                  return (
+                    <TouchableOpacity 
+                      key={semester.id}
+                      style={[
+                        styles.semesterOption, 
+                        selectedSemester === semester.id && styles.activeSemesterOption
+                      ]} 
+                      onPress={() => {
+                        setSelectedSemester(semester.id);
+                        setShowSemesterModal(false);
+                      }}
+                    >
+                      <Text style={selectedSemester === semester.id ? styles.activeSemesterText : styles.semesterText}>
+                        Ciclo {cycleNumber} {semester.year || ''}
+                      </Text>
+                      {selectedSemester === semester.id && (
+                        <Ionicons name="checkmark" size={20} color={colors.primary} />
+                      )}
+                    </TouchableOpacity>
+                  );
+                })}
               </ScrollView>
             </View>
           </View>
