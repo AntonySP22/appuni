@@ -6,7 +6,9 @@ import {
   StyleSheet, 
   FlatList, 
   TouchableOpacity, 
-  ActivityIndicator 
+  ActivityIndicator,
+  Modal,
+  ScrollView
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useData } from '../contexts/DataContext';
@@ -15,17 +17,32 @@ import StatsSummary from '../components/StatsSummary';
 import { colors } from '../constants/colors';
 
 const HomeScreen = ({ navigation }) => {
-  const { courses, stats, loading } = useData();
+  const { courses, semesters, stats, loading } = useData();
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [filterType, setFilterType] = useState('all');
+  const [selectedSemester, setSelectedSemester] = useState('all');
+  const [showSemesterModal, setShowSemesterModal] = useState(false);
 
   useEffect(() => {
+    // Primero filtrar por semestre
+    let semesterFiltered = selectedSemester === 'all' 
+      ? courses 
+      : courses.filter(course => course.semesterId === selectedSemester);
+    
+    // Luego filtrar por estado (aprobada, reprobada, etc)
     if (filterType === 'all') {
-      setFilteredCourses(courses);
+      setFilteredCourses(semesterFiltered);
     } else {
-      setFilteredCourses(courses.filter(course => course.result === filterType));
+      setFilteredCourses(semesterFiltered.filter(course => course.result === filterType));
     }
-  }, [courses, filterType]);
+  }, [courses, filterType, selectedSemester]);
+
+  // Función auxiliar para obtener el nombre del semestre según su ID
+  const getSemesterName = (semesterId) => {
+    if (semesterId === 'all') return 'Todos los ciclos';
+    const semester = semesters.find(sem => sem.id === semesterId);
+    return semester ? `Ciclo ${semester.number} ${semester.year}` : 'Ciclo desconocido';
+  };
 
   if (loading) {
     return (
@@ -39,6 +56,78 @@ const HomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatsSummary stats={stats} />
+      
+      {/* Selector de ciclo */}
+      <TouchableOpacity 
+        style={styles.semesterSelector}
+        onPress={() => setShowSemesterModal(true)}
+      >
+        <Text style={styles.semesterLabel}>
+          {getSemesterName(selectedSemester)}
+        </Text>
+        <Ionicons name="chevron-down" size={20} color={colors.darkGray} />
+      </TouchableOpacity>
+      
+      {/* Modal para seleccionar ciclo */}
+      <Modal
+        visible={showSemesterModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowSemesterModal(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowSemesterModal(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Seleccionar Ciclo</Text>
+              
+              <ScrollView>
+                <TouchableOpacity 
+                  style={[
+                    styles.semesterOption, 
+                    selectedSemester === 'all' && styles.activeSemesterOption
+                  ]} 
+                  onPress={() => {
+                    setSelectedSemester('all');
+                    setShowSemesterModal(false);
+                  }}
+                >
+                  <Text style={selectedSemester === 'all' ? styles.activeSemesterText : styles.semesterText}>
+                    Todos los ciclos
+                  </Text>
+                  {selectedSemester === 'all' && (
+                    <Ionicons name="checkmark" size={20} color={colors.primary} />
+                  )}
+                </TouchableOpacity>
+                
+                {semesters.map(semester => (
+                  <TouchableOpacity 
+                    key={semester.id}
+                    style={[
+                      styles.semesterOption, 
+                      selectedSemester === semester.id && styles.activeSemesterOption
+                    ]} 
+                    onPress={() => {
+                      setSelectedSemester(semester.id);
+                      setShowSemesterModal(false);
+                    }}
+                  >
+                    <Text style={selectedSemester === semester.id ? styles.activeSemesterText : styles.semesterText}>
+                      Ciclo {semester.number} {semester.year}
+                    </Text>
+                    {selectedSemester === semester.id && (
+                      <Ionicons name="checkmark" size={20} color={colors.primary} />
+                    )}
+                  </TouchableOpacity>
+                ))}
+              </ScrollView>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
       
       <View style={styles.filterContainer}>
         <TouchableOpacity
@@ -78,8 +167,8 @@ const HomeScreen = ({ navigation }) => {
       {filteredCourses.length === 0 ? (
         <View style={styles.emptyContainer}>
           <Ionicons name="school-outline" size={60} color={colors.lightGray} />
-          <Text style={styles.emptyText}>No hay materias registradas</Text>
-          <Text style={styles.emptySubtext}>Agrega una materia para comenzar</Text>
+          <Text style={styles.emptyText}>No hay materias para estos filtros</Text>
+          <Text style={styles.emptySubtext}>Cambia los filtros o agrega materias</Text>
         </View>
       ) : (
         <FlatList
@@ -125,6 +214,73 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: colors.primary,
   },
+  // Estilos para el selector de semestre
+  semesterSelector: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    backgroundColor: colors.white,
+    borderRadius: 8,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 16,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.1,
+    shadowRadius: 2,
+    elevation: 2,
+  },
+  semesterLabel: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: colors.darkText,
+  },
+  // Estilos para el modal
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    width: '85%',
+    maxHeight: '70%',
+    backgroundColor: 'white',
+    borderRadius: 12,
+    overflow: 'hidden',
+  },
+  modalContent: {
+    padding: 16,
+  },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.darkText,
+    marginBottom: 16,
+    textAlign: 'center',
+  },
+  semesterOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 14,
+    paddingHorizontal: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lightGray,
+  },
+  activeSemesterOption: {
+    backgroundColor: colors.lightGray,
+  },
+  semesterText: {
+    fontSize: 16,
+    color: colors.darkText,
+  },
+  activeSemesterText: {
+    fontSize: 16,
+    color: colors.primary,
+    fontWeight: 'bold',
+  },
+  // Estilos existentes para filtros de estado
   filterContainer: {
     flexDirection: 'row',
     marginBottom: 16,
@@ -159,6 +315,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: 'bold',
   },
+  // Resto de estilos existentes
   listContainer: {
     paddingBottom: 80,
   },
