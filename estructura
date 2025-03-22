@@ -1,0 +1,34 @@
+// Estructura de directorios
+/*
+academiControl/
+├── App.js
+├── app.json
+├── package.json
+├── src/
+│   ├── components/
+│   │   ├── AddCourseForm.js
+│   │   ├── AddActivityForm.js
+│   │   ├── CourseCard.js
+│   │   ├── ActivityItem.js
+│   │   ├── StatsSummary.js
+│   │   └── CustomHeader.js
+│   ├── screens/
+│   │   ├── HomeScreen.js
+│   │   ├── CourseDetailScreen.js
+│   │   ├── AddCourseScreen.js
+│   │   ├── AddActivityScreen.js
+│   │   └── SettingsScreen.js
+│   ├── navigation/
+│   │   └── AppNavigator.js
+│   ├── utils/
+│   │   ├── calculations.js
+│   │   ├── storage.js
+│   │   └── validation.js
+│   ├── constants/
+│   │   ├── colors.js
+│   │   └── styles.js
+│   └── contexts/
+│       └── DataContext.js
+└── assets/
+    └── icons/
+*/
