@@ -140,7 +140,7 @@ const AddCourseScreen = ({ route, navigation }) => {
             value={name}
             onChangeText={setName}
             placeholder="Ej. Matemáticas I"
-            maxLength={50}
+            maxLength={100}
           />
         </View>
         
