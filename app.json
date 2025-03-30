@@ -36,6 +36,9 @@
         "projectId": "58fc9f39-addd-458d-8728-70a45a120357"
       }
     },
-    "owner": "antontsp22"
+    "owner": "antontsp22",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    }
   }
 }
