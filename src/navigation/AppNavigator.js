@@ -3,11 +3,13 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createStackNavigator } from "@react-navigation/stack";
 import { Ionicons } from "@expo/vector-icons";
+import { TouchableOpacity } from 'react-native';
 
 import HomeScreen from "../screens/HomeScreen";
 import CourseDetailScreen from "../screens/CourseDetailScreen";
 import AddCourseScreen from "../screens/AddCourseScreen";
 import AddActivityScreen from "../screens/AddActivityScreen";
+import ImportExportScreen from "../screens/ImportExportScreen";
 import { colors } from "../constants/colors";
 
 const Stack = createStackNavigator();
@@ -31,6 +33,14 @@ const HomeStack = () => {
         component={HomeScreen} 
         options={({ navigation }) => ({
           title: "Mis Materias",
+          headerRight: () => (
+            <TouchableOpacity 
+              style={{ marginRight: 15 }}
+              onPress={() => navigation.navigate('ImportExport')}
+            >
+              <Ionicons name="download-outline" size={24} color="white" />
+            </TouchableOpacity>
+          )
         })}
       />
       <Stack.Screen 
@@ -49,6 +59,11 @@ const HomeStack = () => {
         name="AddActivity" 
         component={AddActivityScreen} 
         options={{ title: 'Agregar Actividad' }}
+      />
+      <Stack.Screen 
+        name="ImportExport" 
+        component={ImportExportScreen} 
+        options={{ title: 'Importar/Exportar Datos' }}
       />
     </Stack.Navigator>
   );

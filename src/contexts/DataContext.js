@@ -206,6 +206,33 @@ export const DataProvider = ({ children }) => {
     );
   };
 
+  const loadFullData = async (importedCourses, importedSemesters) => {
+    try {
+      console.log("Iniciando importación de datos");
+      
+      // Primero vaciar los datos actuales
+      setCourses([]);
+      setSemesters([]);
+      
+      // Guardar en AsyncStorage
+      await AsyncStorage.setItem('courses', JSON.stringify(importedCourses));
+      await AsyncStorage.setItem('semesters', JSON.stringify(importedSemesters));
+      
+      // Aplicar los nuevos datos
+      setCourses(importedCourses);
+      setSemesters(importedSemesters);
+      
+      // Forzar actualización de estadísticas
+      setTimeout(updateStats, 500);
+      
+      console.log("Importación completada con éxito");
+      return true;
+    } catch (error) {
+      console.error("Error en loadFullData:", error);
+      return false;
+    }
+  };
+
   const value = {
     courses,
     semesters,
@@ -217,6 +244,7 @@ export const DataProvider = ({ children }) => {
     addActivity,
     deleteActivity,
     addSemester,
+    loadFullData, // Añade esta línea
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
