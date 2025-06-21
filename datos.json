@@ -1,0 +1,1114 @@
+{
+  "courses": [
+    {
+      "id": "course-1718992800000",
+      "code": "ALGVEC",
+      "name": "Álgebra Vectorial y Matrices",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-1",
+      "finalGrade": 0.6,
+      "result": "failed",
+      "activities": [
+        {
+          "id": "act-1718992800001",
+          "name": "Corto",
+          "description": "",
+          "percentage": 10,
+          "grade": 3.9,
+          "date": null
+        },
+        {
+          "id": "act-1718992800002",
+          "name": "Parcial",
+          "description": "",
+          "percentage": 15,
+          "grade": 0.1,
+          "date": null
+        },
+        {
+          "id": "act-1718992800003",
+          "name": "Discusion",
+          "description": "",
+          "percentage": 10,
+          "grade": 0.6,
+          "date": null
+        },
+        {
+          "id": "act-1718992800004",
+          "name": "Parcial",
+          "description": "",
+          "percentage": 15,
+          "grade": 0.5,
+          "date": null
+        },
+        {
+          "id": "act-1718992800005",
+          "name": "Corto",
+          "description": "",
+          "percentage": 10,
+          "grade": 0.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800006",
+          "name": "Parcial",
+          "description": "",
+          "percentage": 15,
+          "grade": 0.1,
+          "date": null
+        },
+        {
+          "id": "act-1718992800007",
+          "name": "Discusion",
+          "description": "",
+          "percentage": 10,
+          "grade": 0.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800008",
+          "name": "Parcial",
+          "description": "",
+          "percentage": 15,
+          "grade": 0.6,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800009",
+      "code": "ANAFIL",
+      "name": "Antroplogía Filosofica",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-1",
+      "finalGrade": 8.3,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800010",
+          "name": "Foro de presentación y expectativas. Foro de discusión sobre aproximaciones filosóficas insuficientes. Trabajo ex aula sobre visiones fragmentadas de la realidad",
+          "description": "",
+          "percentage": 30,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800011",
+          "name": "Trabajo ex aula sobre las cegueras ética en la realidad salvadoreña. Foro de discusión sobre la unidad psico-orgánica.",
+          "description": "",
+          "percentage": 35,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800012",
+          "name": "Trabajo ex aula sobre los límites al desarrollo humano en la actual sociedad salvadoreña. Trabajo ex aula sobre la comunicación humana: dificultades y amenazas.",
+          "description": "",
+          "percentage": 35,
+          "grade": 5.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800013",
+      "code": "LENMAR",
+      "name": "Lenguajes de Marcado y Estilo Web",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-1",
+      "finalGrade": 9.5,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800014",
+          "name": "Desafio Practico 1",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800015",
+          "name": "Ensayo Académico",
+          "description": "",
+          "percentage": 10,
+          "grade": 9.5,
+          "date": null
+        },
+        {
+          "id": "act-1718992800016",
+          "name": "Proyecto de Catedra Fase I",
+          "description": "",
+          "percentage": 10,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800017",
+          "name": "Articulo Cientifico",
+          "description": "",
+          "percentage": 15,
+          "grade": 9.5,
+          "date": null
+        },
+        {
+          "id": "act-1718992800018",
+          "name": "Desafio Practico 2",
+          "description": "",
+          "percentage": 15,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800019",
+          "name": "Desafio Practico 3",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800020",
+          "name": "Proyecto de Catedra Fase II",
+          "description": "",
+          "percentage": 20,
+          "grade": 9.3,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800021",
+      "code": "PROALG",
+      "name": "Programación de Algoritmos",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-1",
+      "finalGrade": 8.6,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800022",
+          "name": "Desafio Practico 1",
+          "description": "",
+          "percentage": 15,
+          "grade": 9.99,
+          "date": null
+        },
+        {
+          "id": "act-1718992800023",
+          "name": "Ensayo Académico",
+          "description": "",
+          "percentage": 10,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800024",
+          "name": "Proyecto de Catedra Fase I",
+          "description": "",
+          "percentage": 10,
+          "grade": 8.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800025",
+          "name": "Desafio Practico 2",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800026",
+          "name": "Articulo Cientifico",
+          "description": "",
+          "percentage": 15,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800027",
+          "name": "Desafio Practico 3",
+          "description": "",
+          "percentage": 15,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800028",
+          "name": "Proyecto de Catedra Fase II",
+          "description": "",
+          "percentage": 20,
+          "grade": 6.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800029",
+      "code": "PENSOC",
+      "name": "Pensamiento Social Cristiano",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-1",
+      "finalGrade": 9.6,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800030",
+          "name": "Foro de presentación y expectativas. Foro de discusión sobre la utilidad del PSC. Trabajo ex aula sobre el PSC en el ámbito evangélico.",
+          "description": "",
+          "percentage": 30,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800031",
+          "name": "Trabajo ex aula sobre los cambios provocados por el CV II en la misión de la Iglesia. Foro de discusión sobre los los principales desafíos que la realidad mundial actual plantea a las iglesias.",
+          "description": "",
+          "percentage": 35,
+          "grade": 9.75,
+          "date": null
+        },
+        {
+          "id": "act-1718992800032",
+          "name": "Trabajo ex aula sobre el método Ver, Juzgar, Actuar aplicado a un caso particular. Ensayo sobre el legado de Monseñor Romero.",
+          "description": "",
+          "percentage": 35,
+          "grade": 9.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800033",
+      "code": "REDCOM",
+      "name": "Redes de Comunicación",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-1",
+      "finalGrade": 9.1,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800034",
+          "name": "Ensayo Académico",
+          "description": "",
+          "percentage": 10,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800035",
+          "name": "Desafio Practico 1",
+          "description": "",
+          "percentage": 15,
+          "grade": 4.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800036",
+          "name": "Proyecto de Catedra Fase I",
+          "description": "",
+          "percentage": 10,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800037",
+          "name": "Desafio Practico 2",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800038",
+          "name": "Articulo IEEE",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800039",
+          "name": "Desafio Practico 3",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800040",
+          "name": "Proyecto de Catedra Fase II",
+          "description": "",
+          "percentage": 20,
+          "grade": 10.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800041",
+      "code": "ANADIS",
+      "name": "Análisis y Diseño de Sistemas y Base de Datos",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-2",
+      "finalGrade": 8.7,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800042",
+          "name": "Actividad 1 - Control de lectura #1",
+          "description": "",
+          "percentage": 10,
+          "grade": 8.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800043",
+          "name": "Actividad 2 - Desafio 1: Diseño de interfaces y diagramas UML",
+          "description": "",
+          "percentage": 15,
+          "grade": 7.8,
+          "date": null
+        },
+        {
+          "id": "act-1718992800044",
+          "name": "Actividad 3 - Fase 1 de proyecto",
+          "description": "",
+          "percentage": 10,
+          "grade": 8.1,
+          "date": null
+        },
+        {
+          "id": "act-1718992800045",
+          "name": "Actividad 4 - Control de lectura #2",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800046",
+          "name": "Actividad 5 - Desafio 2: Diseño e implementación de una base de datos",
+          "description": "",
+          "percentage": 15,
+          "grade": 9.7,
+          "date": null
+        },
+        {
+          "id": "act-1718992800047",
+          "name": "Actividad 6 - Desafio 3",
+          "description": "",
+          "percentage": 15,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800048",
+          "name": "Actividad 7 - Segunda fase de Proyecto de Cátedra",
+          "description": "",
+          "percentage": 20,
+          "grade": 8.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800049",
+      "code": "DESWEB",
+      "name": "Desarrollo de Aplic. Web con Soft. Interpret. en el Cliente",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-2",
+      "finalGrade": 9.9,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800050",
+          "name": "Desafio Practico I",
+          "description": "",
+          "percentage": 10,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800051",
+          "name": "Investigación aplicada 1",
+          "description": "",
+          "percentage": 15,
+          "grade": 9.52,
+          "date": null
+        },
+        {
+          "id": "act-1718992800052",
+          "name": "Proyecto Fase I",
+          "description": "",
+          "percentage": 10,
+          "grade": 9.8,
+          "date": null
+        },
+        {
+          "id": "act-1718992800053",
+          "name": "Investigación Aplicada 2",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800054",
+          "name": "Desafió Practico 2",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800055",
+          "name": "Desafió Practico 3",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800056",
+          "name": "Proyecto de cátedra",
+          "description": "",
+          "percentage": 20,
+          "grade": 10.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800057",
+      "code": "ALGVEC",
+      "name": "Álgebra Vectorial y Matrices",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-2",
+      "finalGrade": 2.9,
+      "result": "failed",
+      "activities": [
+        {
+          "id": "act-1718992800058",
+          "name": "Corto 1",
+          "description": "",
+          "percentage": 10,
+          "grade": 4.8,
+          "date": null
+        },
+        {
+          "id": "act-1718992800059",
+          "name": "Examen Parcial 1",
+          "description": "",
+          "percentage": 15,
+          "grade": 6.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800060",
+          "name": "Discusion 1",
+          "description": "",
+          "percentage": 10,
+          "grade": 2.4,
+          "date": null
+        },
+        {
+          "id": "act-1718992800061",
+          "name": "Examen Parcial 2",
+          "description": "",
+          "percentage": 15,
+          "grade": 4.56,
+          "date": null
+        },
+        {
+          "id": "act-1718992800062",
+          "name": "Corto 2",
+          "description": "",
+          "percentage": 10,
+          "grade": 3.4,
+          "date": null
+        },
+        {
+          "id": "act-1718992800063",
+          "name": "Examen Parcial 3",
+          "description": "",
+          "percentage": 15,
+          "grade": 2.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800064",
+          "name": "Discusion 2",
+          "description": "",
+          "percentage": 10,
+          "grade": 0.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800065",
+          "name": "Examen Parcial 4",
+          "description": "",
+          "percentage": 15,
+          "grade": 0.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800066",
+      "code": "PROOBJ",
+      "name": "Programación Orientada a Objetos",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-2",
+      "finalGrade": 9.7,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800067",
+          "name": "Guía de Ejercicios 1",
+          "description": "",
+          "percentage": 10,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800068",
+          "name": "Evaluación práctica primer período.",
+          "description": "",
+          "percentage": 20,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800069",
+          "name": "Primer Avance Proyecto de Cátedra",
+          "description": "",
+          "percentage": 10,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800070",
+          "name": "Evaluación práctica segundo período",
+          "description": "",
+          "percentage": 20,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800071",
+          "name": "Guia de Ejercicios 2",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800072",
+          "name": "Evaluaciones de Guías de práctica del tercer período",
+          "description": "",
+          "percentage": 10,
+          "grade": 8.75,
+          "date": null
+        },
+        {
+          "id": "act-1718992800073",
+          "name": "Proyecto final Teorica.",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800074",
+      "code": "DESPRO",
+      "name": "Desarrollo de Aplicaciones con Software Propietario",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2024-2",
+      "finalGrade": 9.9,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800075",
+          "name": "Investigación aplicada 1",
+          "description": "",
+          "percentage": 10,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800076",
+          "name": "Desafio Practico I",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800077",
+          "name": "Proyecto Fase I",
+          "description": "",
+          "percentage": 10,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800078",
+          "name": "Investigación aplicada 2: Redacción de articulo científico",
+          "description": "",
+          "percentage": 15,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800079",
+          "name": "Prueba Práctica 2",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800080",
+          "name": "Proyecto de catedra",
+          "description": "",
+          "percentage": 20,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800081",
+          "name": "Prueba Práctica 3",
+          "description": "",
+          "percentage": 15,
+          "grade": 10.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800082",
+      "code": "ADMSER",
+      "name": "Administración de Servicios en la Nube",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2025-1",
+      "finalGrade": 9.3,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800083",
+          "name": "Actividad Evaluativa 01",
+          "description": "",
+          "percentage": 12.5,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800084",
+          "name": "Desafio Practico 01",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800085",
+          "name": "Actividad Evaluativa 02",
+          "description": "",
+          "percentage": 12.5,
+          "grade": 7.33,
+          "date": null
+        },
+        {
+          "id": "act-1718992800086",
+          "name": "Desafio Practico 02",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800087",
+          "name": "Actividad Evaluativa 03",
+          "description": "",
+          "percentage": 12.5,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800088",
+          "name": "Desafio Practico 03",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800089",
+          "name": "Actividad Evaluativa 04",
+          "description": "",
+          "percentage": 12.5,
+          "grade": 8.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800090",
+          "name": "Proyecto De Cátedra",
+          "description": "",
+          "percentage": 20.0,
+          "grade": 10.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800091",
+      "code": "DISSOF",
+      "name": "Diseño y Programación de Software Multiplataforma",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2025-1",
+      "finalGrade": 9.6,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800092",
+          "name": "Desafió Practico 1",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800093",
+          "name": "Investigación aplicada 1",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800094",
+          "name": "Avance de proyecto",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 9.5,
+          "date": null
+        },
+        {
+          "id": "act-1718992800095",
+          "name": "Investigación aplicada 2",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800096",
+          "name": "Desafió practico 2",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800097",
+          "name": "Proyecto Final: Elaboración de una APP híbrida haciendo uso de las API´S del dispositivo móvil",
+          "description": "",
+          "percentage": 20.0,
+          "grade": 8.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800098",
+          "name": "Desafió Practico 3",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 10.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800099",
+      "code": "DESWEB",
+      "name": "Desarrollo de Aplic. Web con Soft. Interpret. en el Servidor",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2025-1",
+      "finalGrade": 9.2,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800100",
+          "name": "Primer desafío práctico.",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800101",
+          "name": "Investigación Aplicada 1",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 9.5,
+          "date": null
+        },
+        {
+          "id": "act-1718992800102",
+          "name": "Primer Avance Proyecto de Cátedra",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 8.6,
+          "date": null
+        },
+        {
+          "id": "act-1718992800103",
+          "name": "Segundo desafío practico",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800104",
+          "name": "Investigación aplicada 2",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 9.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800105",
+          "name": "Tercer desafío practico",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 9.9,
+          "date": null
+        },
+        {
+          "id": "act-1718992800106",
+          "name": "Defensa final del proyecto de cátedra",
+          "description": "",
+          "percentage": 20.0,
+          "grade": 8.5,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800107",
+      "code": "DESWEB",
+      "name": "Desarrollo de Aplicaciones con Web Frameworks",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2025-1",
+      "finalGrade": 10.0,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800108",
+          "name": "Desafió Practico 1",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800109",
+          "name": "Investigación Aplicada",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800110",
+          "name": "Proyecto de Cátedra Fase I",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800111",
+          "name": "Investigación Aplicada Spring/ADF",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800112",
+          "name": "Desafió Practico 2",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800113",
+          "name": "Defensa final de proyecto",
+          "description": "",
+          "percentage": 20.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800114",
+          "name": "Desafió Practico 3",
+          "description": "",
+          "percentage": 15.0,
+          "grade": 10.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "course-1718992800115",
+      "code": "SERPRO",
+      "name": "Servidores en Plataformas Propietarias",
+      "enrollment": "1",
+      "uvs": 4,
+      "semesterId": "sem-2025-1",
+      "finalGrade": 9.9,
+      "result": "approved",
+      "activities": [
+        {
+          "id": "act-1718992800116",
+          "name": "Actividad Evaluativa 01",
+          "description": "",
+          "percentage": 12.5,
+          "grade": 9.5,
+          "date": null
+        },
+        {
+          "id": "act-1718992800117",
+          "name": "Desafio Practico 01",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800118",
+          "name": "Actividad Evaluativa 02",
+          "description": "",
+          "percentage": 12.5,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800119",
+          "name": "Desafio Practico 02",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800120",
+          "name": "Actividad Evaluativa 03",
+          "description": "",
+          "percentage": 12.5,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800121",
+          "name": "Desafio Practico 03",
+          "description": "",
+          "percentage": 10.0,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800122",
+          "name": "Actividad Evaluativa 04",
+          "description": "",
+          "percentage": 12.5,
+          "grade": 10.0,
+          "date": null
+        },
+        {
+          "id": "act-1718992800123",
+          "name": "Proyecto De Cátedra",
+          "description": "",
+          "percentage": 20.0,
+          "grade": 10.0,
+          "date": null
+        }
+      ],
+      "createdAt": "2025-06-21T00:00:00.000Z",
+      "updatedAt": "2025-06-21T00:00:00.000Z"
+    }
+  ],
+  "semesters": [
+    {
+      "id": "sem-2024-1",
+      "name": "Ciclo 1",
+      "year": "2024",
+      "createdAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "sem-2024-2",
+      "name": "Ciclo 2",
+      "year": "2024",
+      "createdAt": "2025-06-21T00:00:00.000Z"
+    },
+    {
+      "id": "sem-2025-1",
+      "name": "Ciclo 1",
+      "year": "2025",
+      "createdAt": "2025-06-21T00:00:00.000Z"
+    }
+  ],
+  "version": "1.0.3",
+  "exportDate": "2025-06-21T00:00:00.000Z"
+}

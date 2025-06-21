@@ -121,7 +121,8 @@ const CourseDetailScreen = ({ route, navigation }) => {
               <Text style={styles.courseName}>{course.name}</Text>
               {semester && (
                 <Text style={styles.semester}>
-                  Ciclo: {semester.name} {semester.year}
+                {/* Ciclo */}
+                  {semester.name} {semester.year}
                 </Text>
               )}
             </View>
@@ -157,7 +158,7 @@ const CourseDetailScreen = ({ route, navigation }) => {
         
         <View style={styles.activitiesSection}>
           <View style={styles.sectionHeader}>
-            <Text style={styles.sectionTitle}>Actividades Evaluativas</Text>
+            <Text style={styles.sectionTitle}>Actividades Evaluativas  </Text>
             <TouchableOpacity 
               style={styles.sortDropdown}
               onPress={() => setShowSortModal(true)}
@@ -397,7 +398,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   sectionTitle: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: 'bold',
     color: colors.darkText,
   },
@@ -405,7 +406,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: colors.lightGray,
-    paddingHorizontal: 10,
+    paddingHorizontal: 8,
     paddingVertical: 6,
     borderRadius: 8,
   },

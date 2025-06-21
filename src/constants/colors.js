@@ -1,7 +1,7 @@
 // src/constants/colors.js
 
 export const colors = {
-  primary: '#4A6FA5',      // Main app color
+  primary: '#003087',      // Main app color
   secondary: '#694ED6',    // Secondary color
   tertiary: '#28C2FF',     // Tertiary accent color
   

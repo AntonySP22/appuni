@@ -6,12 +6,12 @@ import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import { colors } from '../constants/colors';
 import { Ionicons } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ImportExportScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { courses, semesters, loadFullData } = useData();
 
-  // Modifica el handleExport para proporcionar instrucciones más detalladas
   const handleExport = async () => {
     try {
       setIsLoading(true);
@@ -124,6 +124,47 @@ const ImportExportScreen = ({ navigation }) => {
     }
   };
 
+  // Función para eliminar todos los datos
+  const handleDeleteAllData = () => {
+    Alert.alert(
+      "Eliminar todos los datos",
+      "¿Estás seguro de que deseas eliminar todos tus datos? Esta acción no se puede deshacer.",
+      [
+        { text: "Cancelar", style: "cancel" },
+        { 
+          text: "Eliminar", 
+          style: "destructive",
+          onPress: async () => {
+            try {
+              // Limpiar AsyncStorage
+              await AsyncStorage.clear();
+              
+              // Actualizar el contexto con datos vacíos
+              await loadFullData([], []);
+              
+              Alert.alert(
+                "Éxito", 
+                "Todos los datos han sido eliminados correctamente.",
+                [
+                  { 
+                    text: "OK",
+                    onPress: () => {
+                      // Navegar de vuelta a la pantalla principal para reflejar los cambios
+                      navigation.navigate("Materias");
+                    }
+                  }
+                ]
+              );
+            } catch (error) {
+              console.error("Error al eliminar datos:", error);
+              Alert.alert("Error", "Ocurrió un error al intentar eliminar los datos.");
+            }
+          }
+        }
+      ]
+    );
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Importar/Exportar Datos</Text>
@@ -151,6 +192,14 @@ const ImportExportScreen = ({ navigation }) => {
           <Text style={styles.optionDescription}>
             Carga datos desde un archivo previamente exportado
           </Text>
+        </TouchableOpacity>
+        
+        {/* Nuevo botón para eliminar datos */}
+        <TouchableOpacity 
+          style={styles.deleteTextButton}
+          onPress={handleDeleteAllData}
+        >
+          <Text style={styles.deleteButtonText}>Eliminar todos los datos</Text>
         </TouchableOpacity>
       </View>
       
@@ -194,6 +243,18 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: colors.white,
     textAlign: 'center',
+  },
+  // Nuevo estilo para el botón de texto de eliminación
+  deleteTextButton: {
+    marginTop: 10,
+    marginBottom: 20,
+    alignItems: 'center',
+    padding: 12,
+  },
+  deleteButtonText: {
+    fontSize: 16,
+    color: colors.danger,
+    textDecorationLine: 'underline',
   },
   disclaimer: {
     fontSize: 14,

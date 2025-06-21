@@ -353,6 +353,18 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: 'bold',
   },
+  // Nuevos estilos para títulos y botones
+  sectionTitle: {
+    fontSize: 18,
+    color: colors.darkText,
+    fontWeight: 'normal', // cambiado de 'bold' a 'normal'
+    marginBottom: 10,
+  },
+  buttonText: {
+    color: colors.white,
+    fontWeight: 'normal', // cambiado de 'bold' a 'normal'
+    fontSize: 16,
+  },
   // Resto de estilos existentes
   listContainer: {
     paddingBottom: 80,

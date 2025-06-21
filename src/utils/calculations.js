@@ -25,21 +25,47 @@ export const calculateCUM = (courses) => {
     // Calcular CUM
     const cum = totalUVs > 0 ? totalUMs / totalUVs : 0;
     
-    return parseFloat(cum.toFixed(1));
+    // Redondear correctamente a 1 decimal
+    return Math.round(cum * 10) / 10;
 };
   
 /**
- * Calcula el CUM general (promedio de CUMs de cada semestre)
- * @param {Object} semesterCUMs - Objeto con CUMs por semestre
- * @returns {number} - CUM general
+ * Calcula el CUM general acumulado sumando todas las UMs y UVs
+ * @param {Array} courses - Lista completa de cursos
+ * @returns {number} - CUM general redondeado a 1 decimal
  */
-export const calculateGeneralCUM = (semesterCUMs) => {
-    const cums = Object.values(semesterCUMs).filter(cum => cum > 0);
+export const calculateGeneralCUM = (courses) => {
+    // Verificar que courses es un array
+    if (!Array.isArray(courses) || courses.length === 0) return 0;
     
-    if (cums.length === 0) return 0;
+    // Filtrar cursos retirados y reprobados
+    const validCourses = courses.filter(course => 
+        course.result !== 'withdrawn' && 
+        course.finalGrade >= 6.0  // Solo materias aprobadas
+    );
     
-    const totalCUM = cums.reduce((sum, cum) => sum + cum, 0);
-    return parseFloat((totalCUM / cums.length).toFixed(1));
+    if (validCourses.length === 0) return 0;
+    
+    // Calcular UVs y UMs totales
+    let totalUVs = 0;
+    let totalUMs = 0;
+    
+    validCourses.forEach(course => {
+      totalUVs += course.uvs;
+      totalUMs += course.uvs * course.finalGrade;
+    });
+    
+    // Mostrar los cálculos en consola
+    console.log('Cálculo de CUM global:');
+    console.log('Total UVs:', totalUVs);
+    console.log('Total UMs:', totalUMs);
+    console.log('CUM Global (UMs/UVs):', totalUMs / totalUVs);
+    
+    // Calcular CUM global y redondear correctamente a 1 decimal
+    const cum = totalUVs > 0 ? totalUMs / totalUVs : 0;
+    
+    // Usando Math.round para redondeo correcto (1.65 → 1.7)
+    return Math.round(cum * 10) / 10;
 };
   
 /**

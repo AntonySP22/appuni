@@ -68,41 +68,56 @@ export const DataProvider = ({ children }) => {
 
   // Actualizar estadísticas
   const updateStats = () => {
-    // Contar cursos por estado
-    const approved = courses.filter(course => course.result === 'approved').length;
-    const failed = courses.filter(course => course.result === 'failed').length;
-    const withdrawn = courses.filter(course => course.result === 'withdrawn').length;
-    
-    // Calcular promedio general (todas las materias)
-    const validCourses = courses.filter(course => course.result !== 'withdrawn');
-    const generalAverage = validCourses.length > 0 
-      ? validCourses.reduce((sum, course) => sum + course.finalGrade, 0) / validCourses.length 
-      : 0;
-    
-    // Calcular CUM por semestre
-    const semesterCUMs = {};
-    semesters.forEach(semester => {
-      const semesterCourses = courses.filter(course => course.semesterId === semester.id);
-      semesterCUMs[semester.id] = calculateCUM(semesterCourses);
-    });
-    
-    // Calcular CUM general (promedio de CUMs por semestre)
-    const generalCUM = calculateGeneralCUM(semesterCUMs);
-    
-    // Calcular UVs inscribibles para el próximo semestre
-    const lastSemester = semesters[semesters.length - 1];
-    const inscribibleUVs = lastSemester 
-      ? calculateInscribibleUVs(semesterCUMs[lastSemester.id]) 
-      : 16;
-    
-    setStats({
-      approvedCourses: approved,
-      failedCourses: failed,
-      withdrawnCourses: withdrawn,
-      generalAverage: parseFloat(generalAverage.toFixed(1)),
-      generalCUM: parseFloat(generalCUM.toFixed(1)),
-      inscribibleUVs
-    });
+    try {
+      // Asegurarse de que courses es un array antes de usarlo
+      const validCourses = Array.isArray(courses) ? courses : [];
+      
+      // Contar cursos por estado
+      const approved = validCourses.filter(course => course.result === 'approved').length;
+      const failed = validCourses.filter(course => course.result === 'failed').length;
+      const withdrawn = validCourses.filter(course => course.result === 'withdrawn').length;
+      
+      // Calcular promedio general (todas las materias)
+      const coursesForAverage = validCourses.filter(course => course.result !== 'withdrawn');
+      const generalAverage = coursesForAverage.length > 0 
+        ? coursesForAverage.reduce((sum, course) => sum + course.finalGrade, 0) / coursesForAverage.length 
+        : 0;
+      
+      // Calcular CUM por semestre
+      const semesterCUMs = {};
+      semesters.forEach(semester => {
+        const semesterCourses = validCourses.filter(course => course.semesterId === semester.id);
+        semesterCUMs[semester.id] = calculateCUM(semesterCourses);
+      });
+      
+      // Calcular CUM general (promedio de CUMs por semestre)
+      const validCoursesForCUM = validCourses.filter(course => 
+        course.result === 'approved'
+      );
+      const generalCUM = calculateGeneralCUM(validCoursesForCUM);
+      
+      // Calcular UVs inscribibles para el próximo semestre
+      const lastSemester = semesters[semesters.length - 1];
+      const inscribibleUVs = lastSemester 
+        ? calculateInscribibleUVs(semesterCUMs[lastSemester.id]) 
+        : 20;
+      
+      setStats({
+        approvedCourses: approved,
+        failedCourses: failed,
+        withdrawnCourses: withdrawn,
+        generalAverage: parseFloat(generalAverage.toFixed(1)),
+        generalCUM: parseFloat(generalCUM.toFixed(1)),
+        inscribibleUVs
+      });
+    } catch (error) {
+      console.error('Error al actualizar estadísticas:', error);
+      // Asegurarse de que stats tiene valores predeterminados en caso de error
+      setStats(prevStats => ({
+        ...prevStats,
+        generalCUM: 0
+      }));
+    }
   };
 
   // Añadir un nuevo curso
