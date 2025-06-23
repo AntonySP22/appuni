@@ -246,6 +246,11 @@ const CourseDetailScreen = ({ route, navigation }) => {
                   key={activity.id}
                   activity={activity}
                   onDelete={() => handleDeleteActivity(activity.id)}
+                  onEdit={() => navigation.navigate('EditActivity', {
+                    courseId: courseId,
+                    activityId: activity.id,
+                    courseName: course.name
+                  })}
                 />
               ))}
             </View>

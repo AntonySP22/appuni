@@ -4,7 +4,7 @@ import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { colors } from '../constants/colors';
 
-const ActivityItem = ({ activity, onDelete }) => {
+const ActivityItem = ({ activity, onDelete, onEdit }) => {
   // Add safeguards for when activity might be missing properties
   if (!activity) {
     return null; // Return nothing if activity is undefined
@@ -38,12 +38,21 @@ const ActivityItem = ({ activity, onDelete }) => {
           <Text style={styles.date}>{formatDate(activity.date || new Date())}</Text>
         </View>
         
-        <TouchableOpacity 
-          style={styles.deleteButton}
-          onPress={onDelete}
-        >
-          <Ionicons name="trash-outline" size={20} color={colors.danger} />
-        </TouchableOpacity>
+        <View style={styles.actionsContainer}>
+          <TouchableOpacity 
+            style={styles.editButton}
+            onPress={onEdit}
+          >
+            <Ionicons name="pencil-outline" size={20} color={colors.primary} />
+          </TouchableOpacity>
+          
+          <TouchableOpacity 
+            style={styles.deleteButton}
+            onPress={onDelete}
+          >
+            <Ionicons name="trash-outline" size={20} color={colors.danger} />
+          </TouchableOpacity>
+        </View>
       </View>
       
       {activity.description ? (
@@ -102,6 +111,13 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.gray,
     marginTop: 2,
+  },
+  actionsContainer: {
+    flexDirection: 'row',
+  },
+  editButton: {
+    padding: 4,
+    marginRight: 8,
   },
   deleteButton: {
     padding: 4,

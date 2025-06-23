@@ -69,13 +69,20 @@ export const calculateGeneralCUM = (courses) => {
 };
   
 /**
- * Calcula las UVs inscribibles para el siguiente semestre
- * @param {number} cum - CUM del semestre actual
- * @returns {number} - UVs inscribibles
+ * Calcula la cantidad de UVs inscribibles según el CUM
+ * @param {number} cum - CUM actual del estudiante
+ * @returns {number} - Cantidad de UVs que puede inscribir
  */
 export const calculateInscribibleUVs = (cum) => {
-    if (cum >= 7.5) return 32;
-    if (cum >= 7.0) return 24;
-    if (cum >= 6.0) return 20;
-    return 16;
+  if (cum >= 7.5) {
+    return 32;  // Excelente rendimiento
+  } else if (cum >= 7.0) {
+    return 24;  // Muy buen rendimiento
+  } else if (cum >= 6.0) {
+    return 20;  // Rendimiento aceptable
+  } else if (cum == 0) {
+    return 20;  // No hay materias, nuevo ingreso
+  } else {
+    return 16;  // Bajo rendimiento ya si es menor de 6.0 osea de 5.99 para abajo
+  }
 };

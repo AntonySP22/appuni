@@ -17,7 +17,7 @@ export const DataProvider = ({ children }) => {
     withdrawnCourses: 0,
     generalAverage: 0,
     generalCUM: 0,
-    inscribibleUVs: 16 // Valor por defecto
+    inscribibleUVs: 20 
   });
 
   // Cargar datos almacenados
@@ -47,6 +47,13 @@ export const DataProvider = ({ children }) => {
       saveCourses();
     }
   }, [courses, loading]);
+  
+  // Añadir este nuevo useEffect para guardar los semestres
+  useEffect(() => {
+    if (!loading) {
+      saveSemesters();
+    }
+  }, [semesters, loading]);
 
   // Guardar cursos en AsyncStorage
   const saveCourses = async () => {
@@ -96,11 +103,9 @@ export const DataProvider = ({ children }) => {
       );
       const generalCUM = calculateGeneralCUM(validCoursesForCUM);
       
-      // Calcular UVs inscribibles para el próximo semestre
-      const lastSemester = semesters[semesters.length - 1];
-      const inscribibleUVs = lastSemester 
-        ? calculateInscribibleUVs(semesterCUMs[lastSemester.id]) 
-        : 20;
+      // Calcular UVs inscribibles para el próximo semestre basado en el CUM general
+      // en lugar del CUM del último semestre
+      const inscribibleUVs = calculateInscribibleUVs(generalCUM);
       
       setStats({
         approvedCourses: approved,
@@ -182,7 +187,8 @@ export const DataProvider = ({ children }) => {
     };
     
     setSemesters(prevSemesters => [...prevSemesters, newSemester]);
-    saveSemesters();
+    // No es necesario llamar a saveSemesters() aquí porque el useEffect se encargará
+    // saveSemesters(); <- Eliminar o comentar esta línea
     return newSemester;
   };
 
@@ -221,26 +227,77 @@ export const DataProvider = ({ children }) => {
     );
   };
 
+  // Función para actualizar una actividad existente
+  const updateActivity = (courseId, activityId, updatedActivity) => {
+    setCourses(prevCourses => 
+      prevCourses.map(course => {
+        if (course.id !== courseId) return course;
+        
+        // Actualizar la actividad específica
+        const updatedActivities = course.activities.map(activity => 
+          activity.id === activityId ? { ...activity, ...updatedActivity } : activity
+        );
+        
+        // Recalcular la nota final basada en las actividades actualizadas
+        const updatedFinalGrade = calculateFinalGrade({ ...course, activities: updatedActivities });
+        
+        // Actualizar el curso con las actividades actualizadas y la nueva nota final
+        return {
+          ...course,
+          activities: updatedActivities,
+          finalGrade: updatedFinalGrade,
+          result: determineResult({ ...course, finalGrade: updatedFinalGrade })
+        };
+      })
+    );
+  };
+
   const loadFullData = async (importedCourses, importedSemesters) => {
     try {
-      console.log("Iniciando importación de datos");
+      console.log("Iniciando importación/limpieza de datos");
       
-      // Primero vaciar los datos actuales
-      setCourses([]);
-      setSemesters([]);
-      
-      // Guardar en AsyncStorage
+      // Primero, guardar en AsyncStorage
       await AsyncStorage.setItem('courses', JSON.stringify(importedCourses));
       await AsyncStorage.setItem('semesters', JSON.stringify(importedSemesters));
       
-      // Aplicar los nuevos datos
+      // Luego actualizar el estado
       setCourses(importedCourses);
       setSemesters(importedSemesters);
       
-      // Forzar actualización de estadísticas
-      setTimeout(updateStats, 500);
+      // Crear un objeto de estadísticas fresco en lugar de confiar en updateStats
+      // Esto garantiza que las estadísticas se calculen con los datos nuevos
+      const approved = importedCourses.filter(course => course.result === 'approved').length;
+      const failed = importedCourses.filter(course => course.result === 'failed').length;
+      const withdrawn = importedCourses.filter(course => course.result === 'withdrawn').length;
       
-      console.log("Importación completada con éxito");
+      // Calcular promedio general
+      const coursesForAverage = importedCourses.filter(course => course.result !== 'withdrawn');
+      const generalAverage = coursesForAverage.length > 0 
+        ? coursesForAverage.reduce((sum, course) => sum + course.finalGrade, 0) / coursesForAverage.length 
+        : 0;
+      
+      // Calcular CUM general
+      const validCoursesForCUM = importedCourses.filter(course => 
+        course.result === 'approved'
+      );
+      const generalCUM = calculateGeneralCUM(validCoursesForCUM);
+      
+      // Calcular UVs inscribibles o usar valor predeterminado
+      const inscribibleUVs = importedCourses.length > 0 
+        ? calculateInscribibleUVs(generalCUM) 
+        : 20;
+      
+      // Actualizar estadísticas directamente
+      setStats({
+        approvedCourses: approved,
+        failedCourses: failed,
+        withdrawnCourses: withdrawn,
+        generalAverage: parseFloat(generalAverage.toFixed(1)),
+        generalCUM: parseFloat(generalCUM.toFixed(1)),
+        inscribibleUVs
+      });
+      
+      console.log("Importación/limpieza completada con éxito");
       return true;
     } catch (error) {
       console.error("Error en loadFullData:", error);
@@ -257,9 +314,11 @@ export const DataProvider = ({ children }) => {
     updateCourse,
     deleteCourse,
     addActivity,
+    updateActivity, // Añadir esta línea
     deleteActivity,
     addSemester,
-    loadFullData, // Añade esta línea
+    loadFullData,
+    updateStats, // Agregar esta función al contexto
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

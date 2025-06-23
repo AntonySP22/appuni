@@ -10,7 +10,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const ImportExportScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { courses, semesters, loadFullData } = useData();
+  const { courses, semesters, loadFullData, updateStats } = useData(); // Asegúrate de incluir updateStats aquí
 
   const handleExport = async () => {
     try {
@@ -139,22 +139,29 @@ const ImportExportScreen = ({ navigation }) => {
               // Limpiar AsyncStorage
               await AsyncStorage.clear();
               
-              // Actualizar el contexto con datos vacíos
-              await loadFullData([], []);
+              // Actualizar el contexto con datos vacíos y forzar una actualización completa
+              const success = await loadFullData([], []);
               
-              Alert.alert(
-                "Éxito", 
-                "Todos los datos han sido eliminados correctamente.",
-                [
-                  { 
-                    text: "OK",
-                    onPress: () => {
-                      // Navegar de vuelta a la pantalla principal para reflejar los cambios
-                      navigation.navigate("Materias");
+              if (success) {
+                Alert.alert(
+                  "Éxito", 
+                  "Todos los datos han sido eliminados correctamente.",
+                  [
+                    { 
+                      text: "OK",
+                      onPress: () => {
+                        // Resetear la pila de navegación
+                        navigation.reset({
+                          index: 0,
+                          routes: [{ name: "Materias" }],
+                        });
+                      }
                     }
-                  }
-                ]
-              );
+                  ]
+                );
+              } else {
+                throw new Error("No se pudo completar el borrado de datos");
+              }
             } catch (error) {
               console.error("Error al eliminar datos:", error);
               Alert.alert("Error", "Ocurrió un error al intentar eliminar los datos.");

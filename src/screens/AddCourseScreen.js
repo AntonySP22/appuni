@@ -19,7 +19,7 @@ import { useData } from '../contexts/DataContext';
 import { colors } from '../constants/colors';
 
 const AddCourseScreen = ({ route, navigation }) => {
-  const { addCourse, updateCourse, semesters, addSemester, stats } = useData();
+  const { addCourse, updateCourse, semesters, addSemester, stats, courses } = useData();
   const editing = route.params?.isEditing || false;
   const existingCourse = route.params?.course || null;
   
@@ -54,6 +54,13 @@ const AddCourseScreen = ({ route, navigation }) => {
       setIsWithdrawn(existingCourse.result === 'withdrawn');
     }
   }, [editing, existingCourse]);
+
+  // Función para calcular el total de UVs ya inscritas en un ciclo
+  const calculateTotalUVsInSemester = (targetSemesterId) => {
+    return courses
+      .filter(course => course.semesterId === targetSemesterId)
+      .reduce((total, course) => total + course.uvs, 0);
+  };
   
   const validateInputs = () => {
     if (!code.trim()) {
@@ -73,27 +80,28 @@ const AddCourseScreen = ({ route, navigation }) => {
       return false;
     }
     
-    // Check if UVs exceed inscribible limit
-    const uvsValue = Number(uvs);
-    if (uvsValue > stats.inscribibleUVs) {
-      Alert.alert(
-        'Error', 
-        `Las UVs no pueden exceder el límite inscribible (${stats.inscribibleUVs} UVs)`
-      );
-      return false;
-    }
-    
+    // Validar si aún hay UVs disponibles para inscribir
+    let selectedSemesterId = semesterId;
     if (newSemester) {
-      if (!semesterNumber.trim() || isNaN(Number(semesterNumber))) {
-        Alert.alert('Error', 'El número de ciclo debe ser un número válido');
-        return false;
-      }
-      if (!semesterYear.trim() || isNaN(Number(semesterYear))) {
-        Alert.alert('Error', 'El año debe ser un número válido');
-        return false;
-      }
-    } else if (!semesterId) {
-      Alert.alert('Error', 'Debes seleccionar un ciclo académico');
+      // Si es un ciclo nuevo, no hay materias previas que contar
+      return true;
+    }
+
+    // Si estamos editando, no contar las UVs de la materia actual
+    let currentSemesterUVs = calculateTotalUVsInSemester(selectedSemesterId);
+    if (editing && existingCourse.semesterId === selectedSemesterId) {
+      currentSemesterUVs -= existingCourse.uvs;
+    }
+
+    // Calcular el total de UVs que tendría el semestre al añadir esta materia
+    const newTotalUVs = currentSemesterUVs + Number(uvs);
+
+    // Verificar si excede el límite inscribible
+    if (newTotalUVs > stats.inscribibleUVs) {
+      Alert.alert(
+        'Límite de UVs excedido', 
+        `No puedes inscribir esta materia porque excederías el límite de ${stats.inscribibleUVs} UVs permitidas según tu CUM.\n\nUVs ya inscritas: ${currentSemesterUVs}\nUVs de esta materia: ${uvs}\nTotal: ${newTotalUVs}`
+      );
       return false;
     }
     
@@ -141,22 +149,13 @@ const AddCourseScreen = ({ route, navigation }) => {
   const handleUvsChange = (text) => {
     // Only allow numeric input
     if (text === '' || /^\d+$/.test(text)) {
-      // If editing existing course, allow the same UVs
+      // Si estamos editando un curso existente, permitimos el mismo valor de UVs
       if (editing && existingCourse && text === existingCourse.uvs.toString()) {
         setUvs(text);
         return;
       }
-
-      const uvsValue = Number(text);
-      if (uvsValue <= stats.inscribibleUVs) {
-        setUvs(text);
-      } else {
-        // Show a toast or temporary alert that the value exceeds the limit
-        Alert.alert(
-          'Advertencia', 
-          `El valor excede el límite inscribible de ${stats.inscribibleUVs} UVs`
-        );
-      }
+      
+      setUvs(text);
     }
   };
 
@@ -188,6 +187,35 @@ const AddCourseScreen = ({ route, navigation }) => {
             <Text style={styles.formTitle}>
               {editing ? 'Editar Materia' : 'Agregar Nueva Materia'}
             </Text>
+            
+            {/* Current UVs Info */}
+            {!newSemester && semesterId && (
+              <View style={styles.uvsInfoContainer}>
+                <Text style={styles.uvsInfoTitle}>Información de UVs:</Text>
+                <View style={styles.uvsInfoRow}>
+                  <Text style={styles.uvsInfoLabel}>UVs inscribibles:</Text>
+                  <Text style={styles.uvsInfoValue}>{stats.inscribibleUVs}</Text>
+                </View>
+                <View style={styles.uvsInfoRow}>
+                  <Text style={styles.uvsInfoLabel}>UVs ya inscritas:</Text>
+                  <Text style={styles.uvsInfoValue}>
+                    {calculateTotalUVsInSemester(semesterId) - (editing && existingCourse.semesterId === semesterId ? existingCourse.uvs : 0)}
+                  </Text>
+                </View>
+                <View style={styles.uvsInfoRow}>
+                  <Text style={styles.uvsInfoLabel}>UVs disponibles:</Text>
+                  <Text style={[
+                    styles.uvsInfoValue,
+                    styles.uvsAvailable
+                  ]}>
+                    {stats.inscribibleUVs - (
+                      calculateTotalUVsInSemester(semesterId) - 
+                      (editing && existingCourse.semesterId === semesterId ? existingCourse.uvs : 0)
+                    )}
+                  </Text>
+                </View>
+              </View>
+            )}
             
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Código de Materia</Text>
@@ -381,6 +409,7 @@ const AddCourseScreen = ({ route, navigation }) => {
   );
 };
 
+// Add these new styles
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -505,7 +534,36 @@ const styles = StyleSheet.create({
   },
   bottomSpace: {
     height: 100, // Extra space to ensure bottom fields are visible
-  }
+  },
+  uvsInfoContainer: {
+    backgroundColor: colors.lightGray,
+    borderRadius: 8,
+    padding: 12,
+    marginBottom: 16,
+  },
+  uvsInfoTitle: {
+    fontSize: 14,
+    fontWeight: 'bold',
+    color: colors.darkText,
+    marginBottom: 8,
+  },
+  uvsInfoRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 4,
+  },
+  uvsInfoLabel: {
+    fontSize: 13,
+    color: colors.darkGray,
+  },
+  uvsInfoValue: {
+    fontSize: 13,
+    fontWeight: 'bold',
+    color: colors.darkText,
+  },
+  uvsAvailable: {
+    color: colors.primary,
+  },
 });
 
 export default AddCourseScreen;
