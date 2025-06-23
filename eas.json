@@ -25,11 +25,5 @@
   },
   "submit": {
     "production": {}
-  },
-  "updates": {
-    "enabled": true,
-    "checkAutomatically": "ON_LOAD",
-    "fallbackToCacheTimeout": 0,
-    "url": "https://u.expo.dev/58fc9f39-addd-458d-8728-70a45a120357"
   }
 }
