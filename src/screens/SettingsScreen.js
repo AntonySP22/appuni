@@ -4,8 +4,7 @@ import {
   View, 
   Text, 
   StyleSheet, 
-  TouchableOpacity, 
-  Alert, 
+  TouchableOpacity,
   ScrollView,
   Switch,
   Linking
@@ -14,17 +13,20 @@ import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { colors } from '../constants/colors';
 import { useData } from '../contexts/DataContext';
+import { useAlert } from '../contexts/AlertContext';
 
 const SettingsScreen = () => {
   const { semesters, courses } = useData();
+  const { showAlert } = useAlert();
   // Kept for future implementation but commented out to avoid unused variable warnings
   // const [darkMode, setDarkMode] = useState(false);
   
   const clearAllData = async () => {
-    Alert.alert(
-      "Eliminar todos los datos",
-      "¿Estás seguro de que deseas eliminar todos tus datos? Esta acción no se puede deshacer.",
-      [
+    showAlert({
+      title: "Eliminar todos los datos",
+      message: "¿Estás seguro de que deseas eliminar todos tus datos? Esta acción no se puede deshacer.",
+      type: "warning",
+      buttons: [
         { text: "Cancelar", style: "cancel" },
         { 
           text: "Eliminar", 
@@ -32,28 +34,42 @@ const SettingsScreen = () => {
           onPress: async () => {
             try {
               await AsyncStorage.clear();
-              Alert.alert("Éxito", "Todos los datos han sido eliminados. Por favor, reinicia la aplicación.");
+              showAlert({
+                title: "Éxito",
+                message: "Todos los datos han sido eliminados. Por favor, reinicia la aplicación.",
+                type: "success",
+                buttons: [{ text: "OK" }]
+              });
             } catch (error) {
-              Alert.alert("Error", "Ocurrió un error al intentar eliminar los datos.");
+              showAlert({
+                title: "Error",
+                message: "Ocurrió un error al intentar eliminar los datos.",
+                type: "error",
+                buttons: [{ text: "OK" }]
+              });
             }
           }
         }
       ]
-    );
+    });
   };
   
   const exportData = () => {
-    Alert.alert(
-      "Función no disponible",
-      "La exportación de datos estará disponible en futuras versiones."
-    );
+    showAlert({
+      title: "Función no disponible",
+      message: "La exportación de datos estará disponible en futuras versiones.",
+      type: "info",
+      buttons: [{ text: "OK" }]
+    });
   };
   
   const importData = () => {
-    Alert.alert(
-      "Función no disponible",
-      "La importación de datos estará disponible en futuras versiones."
-    );
+    showAlert({
+      title: "Función no disponible",
+      message: "La importación de datos estará disponible en futuras versiones.",
+      type: "info",
+      buttons: [{ text: "OK" }]
+    });
   };
   
   // Kept but commented out to avoid unused function warnings
@@ -125,3 +141,75 @@ const SettingsScreen = () => {
 };
 
 export default SettingsScreen;
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: colors.background,
+  },
+  section: {
+    marginBottom: 24,
+    paddingHorizontal: 16,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.text,
+    marginBottom: 16,
+  },
+  statsCard: {
+    backgroundColor: colors.card,
+    borderRadius: 8,
+    padding: 16,
+    elevation: 2,
+  },
+  statTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+    color: colors.text,
+    marginBottom: 12,
+  },
+  statRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 8,
+  },
+  statLabel: {
+    fontSize: 14,
+    color: colors.textSecondary,
+  },
+  statValue: {
+    fontSize: 14,
+    fontWeight: '500',
+    color: colors.text,
+  },
+  optionButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 8,
+    backgroundColor: colors.card,
+    marginBottom: 12,
+    elevation: 2,
+  },
+  optionText: {
+    fontSize: 16,
+    color: colors.text,
+    marginLeft: 12,
+  },
+  dangerButton: {
+    backgroundColor: colors.dangerLight,
+  },
+  dangerText: {
+    color: colors.danger,
+  },
+  switchOption: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 16,
+    borderRadius: 8,
+    backgroundColor: colors.card,
+    marginBottom: 12,
+    elevation: 2,
+  },
+});

@@ -6,16 +6,17 @@ import {
   TextInput, 
   TouchableOpacity, 
   ScrollView,
-  Alert,
   Platform 
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useData } from '../contexts/DataContext';
 import { colors } from '../constants/colors';
+import { useAlert } from '../contexts/AlertContext';
 
 const EditActivityScreen = ({ route, navigation }) => {
   const { courseId, activityId, courseName } = route.params;
   const { courses, updateActivity } = useData();
+  const { showAlert } = useAlert();
   
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
@@ -40,41 +41,73 @@ const EditActivityScreen = ({ route, navigation }) => {
   
   const validateInputs = () => {
     if (!name.trim()) {
-      Alert.alert('Error', 'El nombre de la actividad es requerido');
+      showAlert({
+        title: 'Error',
+        message: 'El nombre de la actividad es requerido',
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
       return false;
     }
     
     if (!percentage.trim() || isNaN(Number(percentage))) {
-      Alert.alert('Error', 'El porcentaje debe ser un número válido');
+      showAlert({
+        title: 'Error',
+        message: 'El porcentaje debe ser un número válido',
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
       return false;
     }
     
     const percentageValue = Number(percentage);
     if (percentageValue <= 0 || percentageValue > 100) {
-      Alert.alert('Error', 'El porcentaje debe estar entre 0 y 100');
+      showAlert({
+        title: 'Error',
+        message: 'El porcentaje debe estar entre 0 y 100',
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
       return false;
     }
     
     // Check if total percentage would exceed 100%
     const course = courses.find(c => c.id === courseId);
     if (course && course.activities) {
-      const currentTotal = course.activities.reduce((sum, act) => sum + act.percentage, 0);
+      // Filter out the current activity being edited
+      const otherActivities = course.activities.filter(act => act.id !== activityId);
+      const currentTotal = otherActivities.reduce((sum, act) => sum + act.percentage, 0);
       const newTotal = currentTotal + percentageValue;
       
       if (newTotal > 100) {
-        Alert.alert('Error', `El total de porcentajes excedería el 100% (Total actual: ${currentTotal}%, Nuevo total: ${newTotal}%)`);
+        showAlert({
+          title: 'Error',
+          message: `El total de porcentajes excedería el 100% (Total actual: ${currentTotal}%, Nuevo total: ${newTotal}%)`,
+          type: 'error',
+          buttons: [{ text: 'OK' }]
+        });
         return false;
       }
     }
     
     if (!grade.trim() || isNaN(Number(grade))) {
-      Alert.alert('Error', 'La nota debe ser un número válido');
+      showAlert({
+        title: 'Error',
+        message: 'La nota debe ser un número válido',
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
       return false;
     }
     
     const gradeValue = Number(grade);
     if (gradeValue < 0 || gradeValue > 10) {
-      Alert.alert('Error', 'La nota debe estar entre 0 y 10');
+      showAlert({
+        title: 'Error',
+        message: 'La nota debe estar entre 0 y 10',
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
       return false;
     }
     
@@ -93,9 +126,14 @@ const EditActivityScreen = ({ route, navigation }) => {
     };
     
     updateActivity(courseId, activityId, activityData);
-    Alert.alert("Éxito", "Actividad actualizada correctamente", [
-      { text: "OK", onPress: () => navigation.goBack() }
-    ]);
+    showAlert({
+      title: "Éxito",
+      message: "Actividad actualizada correctamente",
+      type: "success",
+      buttons: [
+        { text: "OK", onPress: () => navigation.goBack() }
+      ]
+    });
   };
 
   return (

@@ -3,6 +3,7 @@ import React, { useEffect } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { StatusBar, SafeAreaView, Alert } from 'react-native';
 import { DataProvider } from './src/contexts/DataContext';
+import { AlertProvider } from './src/contexts/AlertContext';
 import AppNavigator from './src/navigation/AppNavigator';
 import { colors } from './src/constants/colors';
 import * as Updates from 'expo-updates';
@@ -30,12 +31,14 @@ export default function App() {
 
   return (
     <DataProvider>
-      <NavigationContainer>
-        <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
-          <StatusBar backgroundColor={colors.primary} />
-          <AppNavigator />
-        </SafeAreaView>
-      </NavigationContainer>
+      <AlertProvider>
+        <NavigationContainer>
+          <SafeAreaView style={{ flex: 1, backgroundColor: colors.background }}>
+            <StatusBar backgroundColor={colors.primary} />
+            <AppNavigator />
+          </SafeAreaView>
+        </NavigationContainer>
+      </AlertProvider>
     </DataProvider>
   );
 }

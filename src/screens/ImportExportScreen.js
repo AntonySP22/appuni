@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useData } from '../contexts/DataContext';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
@@ -7,10 +7,12 @@ import * as Sharing from 'expo-sharing';
 import { colors } from '../constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAlert } from '../contexts/AlertContext';
 
 const ImportExportScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
-  const { courses, semesters, loadFullData, updateStats } = useData(); // Asegúrate de incluir updateStats aquí
+  const { courses, semesters, loadFullData, updateStats } = useData();
+  const { showAlert } = useAlert();
 
   const handleExport = async () => {
     try {
@@ -42,22 +44,32 @@ const ImportExportScreen = ({ navigation }) => {
           UTI: 'public.json'
         });
         
-        Alert.alert(
-          'Instrucciones',
-          '1. El archivo se llama: ' + fileName,
-          [{ text: 'Entendido', style: 'default' }]
-        );
+        showAlert({
+          title: 'Instrucciones',
+          message: '1. El archivo se llama: ' + fileName,
+          type: 'info',
+          buttons: [{ text: 'Entendido', style: 'default' }]
+        });
       } else {
-        Alert.alert('Error', 'La función de compartir no está disponible en este dispositivo');
+        showAlert({
+          title: 'Error',
+          message: 'La función de compartir no está disponible en este dispositivo',
+          type: 'error',
+          buttons: [{ text: 'OK' }]
+        });
       }
     } catch (error) {
-      Alert.alert('Error', 'No se pudo exportar los datos: ' + error.message);
+      showAlert({
+        title: 'Error',
+        message: 'No se pudo exportar los datos: ' + error.message,
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Función mejorada para importar datos
   const handleImport = async () => {
     try {
       setIsLoading(true);
@@ -89,47 +101,68 @@ const ImportExportScreen = ({ navigation }) => {
           console.log(`Encontrados: ${importedData.courses.length} cursos y ${importedData.semesters.length} semestres`);
           
           // Confirmar importación
-          Alert.alert(
-            'Confirmar importación',
-            `Se importarán ${importedData.courses.length} materias y ${importedData.semesters.length} ciclos. Esto reemplazará todos tus datos actuales. ¿Estás seguro?`,
-            [
+          showAlert({
+            title: 'Confirmar importación',
+            message: `Se importarán ${importedData.courses.length} materias y ${importedData.semesters.length} ciclos. Esto reemplazará todos tus datos actuales. ¿Estás seguro?`,
+            type: 'warning',
+            buttons: [
               { text: 'Cancelar', style: 'cancel' },
               { 
-                text: 'Importar', 
+                text: 'Importar',
                 onPress: async () => {
                   const success = await loadFullData(importedData.courses, importedData.semesters);
                   if (success) {
-                    Alert.alert('Éxito', 'Datos importados correctamente. La app se actualizará.');
+                    showAlert({
+                      title: 'Éxito',
+                      message: 'Datos importados correctamente. La app se actualizará.',
+                      type: 'success',
+                      buttons: [{ text: 'OK' }]
+                    });
                     // Esperar un momento antes de navegar de vuelta
                     setTimeout(() => navigation.goBack(), 1000);
                   } else {
-                    Alert.alert('Error', 'No se pudieron importar los datos');
+                    showAlert({
+                      title: 'Error',
+                      message: 'No se pudieron importar los datos',
+                      type: 'error',
+                      buttons: [{ text: 'OK' }]
+                    });
                   }
                 } 
               }
             ]
-          );
+          });
         } catch (parseError) {
           console.error("Error al parsear JSON:", parseError);
-          Alert.alert('Error', 'El archivo no contiene un formato JSON válido');
+          showAlert({
+            title: 'Error',
+            message: 'El archivo no contiene un formato JSON válido',
+            type: 'error',
+            buttons: [{ text: 'OK' }]
+          });
         }
       } else {
         console.log("Selección de archivo cancelada o fallida");
       }
     } catch (error) {
       console.error("Error en importación:", error);
-      Alert.alert('Error', 'No se pudo importar los datos: ' + error.message);
+      showAlert({
+        title: 'Error',
+        message: 'No se pudo importar los datos: ' + error.message,
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
     } finally {
       setIsLoading(false);
     }
   };
 
-  // Función para eliminar todos los datos
   const handleDeleteAllData = () => {
-    Alert.alert(
-      "Eliminar todos los datos",
-      "¿Estás seguro de que deseas eliminar todos tus datos? Esta acción no se puede deshacer.",
-      [
+    showAlert({
+      title: "Eliminar todos los datos",
+      message: "¿Estás seguro de que deseas eliminar todos tus datos? Esta acción no se puede deshacer.",
+      type: "warning",
+      buttons: [
         { text: "Cancelar", style: "cancel" },
         { 
           text: "Eliminar", 
@@ -143,10 +176,11 @@ const ImportExportScreen = ({ navigation }) => {
               const success = await loadFullData([], []);
               
               if (success) {
-                Alert.alert(
-                  "Éxito", 
-                  "Todos los datos han sido eliminados correctamente.",
-                  [
+                showAlert({
+                  title: "Éxito", 
+                  message: "Todos los datos han sido eliminados correctamente.",
+                  type: "success",
+                  buttons: [
                     { 
                       text: "OK",
                       onPress: () => {
@@ -158,18 +192,23 @@ const ImportExportScreen = ({ navigation }) => {
                       }
                     }
                   ]
-                );
+                });
               } else {
                 throw new Error("No se pudo completar el borrado de datos");
               }
             } catch (error) {
               console.error("Error al eliminar datos:", error);
-              Alert.alert("Error", "Ocurrió un error al intentar eliminar los datos.");
+              showAlert({
+                title: "Error",
+                message: "Ocurrió un error al intentar eliminar los datos.",
+                type: "error",
+                buttons: [{ text: "OK" }]
+              });
             }
           }
         }
       ]
-    );
+    });
   };
 
   return (

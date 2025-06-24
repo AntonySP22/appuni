@@ -7,7 +7,6 @@ import {
   TextInput, 
   TouchableOpacity, 
   ScrollView,
-  Alert,
   Switch,
   KeyboardAvoidingView,
   Platform,
@@ -16,10 +15,12 @@ import {
 } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useData } from '../contexts/DataContext';
+import { useAlert } from '../contexts/AlertContext';
 import { colors } from '../constants/colors';
 
 const AddCourseScreen = ({ route, navigation }) => {
   const { addCourse, updateCourse, semesters, addSemester, stats, courses } = useData();
+  const { showAlert } = useAlert();
   const editing = route.params?.isEditing || false;
   const existingCourse = route.params?.course || null;
   
@@ -64,19 +65,42 @@ const AddCourseScreen = ({ route, navigation }) => {
   
   const validateInputs = () => {
     if (!code.trim()) {
-      Alert.alert('Error', 'El código de materia es requerido');
+      showAlert({
+        title: 'Error',
+        message: 'El código de materia es requerido',
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
       return false;
     }
+    
     if (!name.trim()) {
-      Alert.alert('Error', 'El nombre de materia es requerido');
+      showAlert({
+        title: 'Error',
+        message: 'El nombre de materia es requerido',
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
       return false;
     }
+    
     if (!enrollment.trim()) {
-      Alert.alert('Error', 'La matrícula es requerida');
+      showAlert({
+        title: 'Error',
+        message: 'La matrícula es requerida',
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
       return false;
     }
+    
     if (!uvs.trim() || isNaN(Number(uvs)) || Number(uvs) <= 0) {
-      Alert.alert('Error', 'Las UVs deben ser un número mayor a 0');
+      showAlert({
+        title: 'Error',
+        message: 'Las UVs deben ser un número mayor a 0',
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
       return false;
     }
     
@@ -98,10 +122,12 @@ const AddCourseScreen = ({ route, navigation }) => {
 
     // Verificar si excede el límite inscribible
     if (newTotalUVs > stats.inscribibleUVs) {
-      Alert.alert(
-        'Límite de UVs excedido', 
-        `No puedes inscribir esta materia porque excederías el límite de ${stats.inscribibleUVs} UVs permitidas según tu CUM.\n\nUVs ya inscritas: ${currentSemesterUVs}\nUVs de esta materia: ${uvs}\nTotal: ${newTotalUVs}`
-      );
+      showAlert({
+        title: 'Límite de UVs excedido', 
+        message: `No puedes inscribir esta materia porque excederías el límite de ${stats.inscribibleUVs} UVs permitidas según tu CUM.\n\nUVs ya inscritas: ${currentSemesterUVs}\nUVs de esta materia: ${uvs}\nTotal: ${newTotalUVs}`,
+        type: 'error',
+        buttons: [{ text: 'OK' }]
+      });
       return false;
     }
     
@@ -135,14 +161,20 @@ const AddCourseScreen = ({ route, navigation }) => {
     
     if (editing) {
       updateCourse(existingCourse.id, courseData);
-      Alert.alert('Éxito', 'Materia actualizada correctamente', [
-        { text: 'OK', onPress: () => navigation.goBack() }
-      ]);
+      showAlert({
+        title: 'Éxito',
+        message: 'Materia actualizada correctamente',
+        type: 'success',
+        buttons: [{ text: 'OK', onPress: () => navigation.goBack() }]
+      });
     } else {
       addCourse(courseData);
-      Alert.alert('Éxito', 'Materia añadida correctamente', [
-        { text: 'OK', onPress: () => navigation.goBack() }
-      ]);
+      showAlert({
+        title: 'Éxito',
+        message: 'Materia añadida correctamente',
+        type: 'success',
+        buttons: [{ text: 'OK', onPress: () => navigation.goBack() }]
+      });
     }
   };
 

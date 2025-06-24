@@ -9,12 +9,12 @@ import {
   ActivityIndicator,
   Modal,
   ScrollView,
-  Alert,
   TextInput,
   Switch // Add this import
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useData } from '../contexts/DataContext';
+import { useAlert } from '../contexts/AlertContext';
 import CourseCard from '../components/CourseCard';
 import StatsSummary from '../components/StatsSummary';
 import { colors } from '../constants/colors';
@@ -30,6 +30,7 @@ const HomeScreen = ({ navigation }) => {
     deleteCourse, // Add this
     updateCourse  // Add this
   } = useData();
+  const { showAlert } = useAlert();
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [filterType, setFilterType] = useState('all');
   const [selectedSemester, setSelectedSemester] = useState('all');
@@ -169,12 +170,22 @@ const HomeScreen = ({ navigation }) => {
     const year = parseInt(editSemesterYear);
     
     if (isNaN(number)) {
-      Alert.alert("Error", "El número de ciclo debe ser un número válido");
+      showAlert({
+        title: "Error",
+        message: "El número de ciclo debe ser un número válido",
+        type: "error",
+        buttons: [{ text: "OK" }]
+      });
       return;
     }
     
     if (isNaN(year)) {
-      Alert.alert("Error", "El año debe ser un número válido");
+      showAlert({
+        title: "Error",
+        message: "El año debe ser un número válido",
+        type: "error",
+        buttons: [{ text: "OK" }]
+      });
       return;
     }
     
@@ -186,6 +197,13 @@ const HomeScreen = ({ navigation }) => {
     
     setShowEditModal(false);
     setEditingSemester(null);
+    
+    showAlert({
+      title: "Éxito",
+      message: "Ciclo actualizado correctamente",
+      type: "success",
+      buttons: [{ text: "OK" }]
+    });
   };
 
   if (loading) {

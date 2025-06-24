@@ -6,18 +6,20 @@ import {
   StyleSheet, 
   FlatList, 
   TouchableOpacity, 
-  Alert,
   ScrollView,
-  Modal
+  Modal,
+  Alert
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useData } from '../contexts/DataContext';
 import { colors } from '../constants/colors';
 import ActivityItem from '../components/ActivityItem';
+import { useAlert } from '../contexts/AlertContext';
 
 const CourseDetailScreen = ({ route, navigation }) => {
   const { courseId } = route.params;
   const { courses, deleteActivity, deleteCourse, semesters } = useData();
+  const { showAlert } = useAlert();
   const [sortOrder, setSortOrder] = useState('default');
   const [showSortModal, setShowSortModal] = useState(false);
   
@@ -68,38 +70,77 @@ const CourseDetailScreen = ({ route, navigation }) => {
   };
   
   const handleDeleteCourse = () => {
-    Alert.alert(
-      "Eliminar Materia",
-      "¿Estás seguro de que deseas eliminar esta materia? Esta acción no se puede deshacer.",
-      [
-        { text: "Cancelar", style: "cancel" },
-        { 
-          text: "Eliminar", 
-          style: "destructive",
-          onPress: () => {
-            deleteCourse(courseId);
-            navigation.goBack();
+    if (showAlert) {
+      showAlert({
+        title: "Eliminar Materia",
+        message: "¿Estás seguro de que deseas eliminar esta materia? Esta acción no se puede deshacer.",
+        type: "warning",
+        buttons: [
+          { text: "Cancelar", style: "cancel" },
+          { 
+            text: "Eliminar", 
+            style: "destructive",
+            onPress: () => {
+              deleteCourse(courseId);
+              navigation.goBack();
+            }
           }
-        }
-      ]
-    );
+        ]
+      });
+    } else {
+      // Fallback to standard Alert
+      Alert.alert(
+        "Eliminar Materia",
+        "¿Estás seguro de que deseas eliminar esta materia? Esta acción no se puede deshacer.",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { 
+            text: "Eliminar", 
+            style: "destructive",
+            onPress: () => {
+              deleteCourse(courseId);
+              navigation.goBack();
+            }
+          }
+        ]
+      );
+    }
   };
   
   const handleDeleteActivity = (activityId) => {
-    Alert.alert(
-      "Eliminar Actividad",
-      "¿Estás seguro de que deseas eliminar esta actividad? Esta acción no se puede deshacer.",
-      [
-        { text: "Cancelar", style: "cancel" },
-        { 
-          text: "Eliminar", 
-          style: "destructive",
-          onPress: () => {
-            deleteActivity(courseId, activityId);
+    if (showAlert) {
+      showAlert({
+        title: "Eliminar Actividad",
+        message: "¿Estás seguro de que deseas eliminar esta actividad? Esta acción no se puede deshacer.",
+        type: "warning",
+        buttons: [
+          { text: "Cancelar", style: "cancel" },
+          { 
+            text: "Eliminar", 
+            style: "destructive",
+            onPress: () => {
+              deleteActivity(courseId, activityId);
+            }
           }
-        }
-      ]
-    );
+        ]
+      });
+    } else {
+      // Fallback to standard Alert
+      Alert.alert(
+        "Eliminar Actividad",
+        "¿Estás seguro de que deseas eliminar esta actividad? Esta acción no se puede deshacer.",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { 
+            text: "Eliminar", 
+            style: "destructive",
+            onPress: () => {
+              deleteActivity(courseId, activityId);
+            }
+          }
+        ]
+      );
+    }
   };
 
   const getSortText = (order) => {
