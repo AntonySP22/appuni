@@ -1,23 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator, Platform, Linking } from 'react-native';
 import { useData } from '../contexts/DataContext';
 import * as DocumentPicker from 'expo-document-picker';
 import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
 import { colors } from '../constants/colors';
 import { Ionicons } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAlert } from '../contexts/AlertContext';
+import * as Sharing from 'expo-sharing';
+import * as IntentLauncher from 'expo-intent-launcher';
+import Constants from 'expo-constants';
 
 const ImportExportScreen = ({ navigation }) => {
   const [isLoading, setIsLoading] = useState(false);
   const { courses, semesters, loadFullData, updateStats } = useData();
   const { showAlert } = useAlert();
 
+  // Actualiza este método
   const handleExport = async () => {
     try {
       setIsLoading(true);
-      
+
       // Preparar datos para exportar
       const exportData = {
         courses,
@@ -29,39 +33,90 @@ const ImportExportScreen = ({ navigation }) => {
       // Convertir a JSON
       const jsonData = JSON.stringify(exportData, null, 2);
       
-      // Nombre del archivo con fecha
-      const fileName = `appuni_data_${new Date().toISOString().split('T')[0]}.json`;
-      const filePath = `${FileSystem.documentDirectory}${fileName}`;
+      // Nombre del archivo con fecha formateada
+      const formattedDate = new Date().toISOString().split('T')[0].replace(/-/g, '');
+      const fileName = `appuni_data_${formattedDate}.json`;
       
-      // Guardar archivo temporalmente
+      // Guardar en el directorio de caché primero (para Android)
+      const filePath = `${FileSystem.cacheDirectory}${fileName}`;
+      
+      // Escribir contenido al archivo
       await FileSystem.writeAsStringAsync(filePath, jsonData);
+      console.log(`Archivo creado temporalmente en: ${filePath}`);
       
-      // Compartir archivo con mejores instrucciones
-      if (await Sharing.isAvailableAsync()) {
-        await Sharing.shareAsync(filePath, {
-          mimeType: 'application/json',
-          dialogTitle: 'Guardar archivo de datos',
-          UTI: 'public.json'
-        });
-        
-        showAlert({
-          title: 'Instrucciones',
-          message: '1. El archivo se llama: ' + fileName,
-          type: 'info',
-          buttons: [{ text: 'Entendido', style: 'default' }]
-        });
+      if (Platform.OS === 'android') {
+        try {
+          // Solicitar al usuario que elija dónde guardar el archivo
+          const permissions = await FileSystem.StorageAccessFramework.requestDirectoryPermissionsAsync();
+          
+          if (permissions.granted) {
+            const destinationUri = await FileSystem.StorageAccessFramework.createFileAsync(
+              permissions.directoryUri,
+              fileName,
+              'application/json'
+            );
+            
+            // Leer el archivo temporal
+            const fileContent = await FileSystem.readAsStringAsync(filePath);
+            
+            // Escribir al destino elegido por el usuario
+            await FileSystem.StorageAccessFramework.writeAsStringAsync(
+              destinationUri,
+              fileContent
+            );
+            
+            showAlert({
+              title: 'Archivo guardado',
+              message: `El archivo ${fileName} ha sido guardado correctamente en la ubicación seleccionada.`,
+              type: 'success',
+              buttons: [{ text: 'OK' }]
+            });
+            return;
+          } else {
+            // El usuario no seleccionó una ubicación
+            showAlert({
+              title: 'Guardado cancelado',
+              message: 'No seleccionaste una ubicación para guardar el archivo.',
+              type: 'warning',
+              buttons: [{ text: 'OK' }]
+            });
+            return;
+          }
+        } catch (e) {
+          console.error("Error al usar StorageAccessFramework:", e);
+          
+          // Si falla, intentamos el método anterior
+          if (await Sharing.isAvailableAsync()) {
+            await Sharing.shareAsync(filePath, {
+              mimeType: 'application/json',
+              dialogTitle: 'Guardar archivo JSON',
+              UTI: 'public.json'
+            });
+            
+            showAlert({
+              title: 'Archivo disponible',
+              message: 'Para guardar el archivo, selecciona "Guardar en" o "Guardar como" en el menú que aparece.',
+              type: 'info',
+              buttons: [{ text: 'OK' }]
+            });
+            return;
+          }
+        }
       } else {
-        showAlert({
-          title: 'Error',
-          message: 'La función de compartir no está disponible en este dispositivo',
-          type: 'error',
-          buttons: [{ text: 'OK' }]
-        });
+        // Para iOS u otras plataformas, mantener el comportamiento actual
+        if (await Sharing.isAvailableAsync()) {
+          await Sharing.shareAsync(filePath, {
+            mimeType: 'application/json',
+            dialogTitle: 'Guardar archivo JSON',
+            UTI: 'public.json'
+          });
+        }
       }
     } catch (error) {
+      console.error("Error al exportar:", error);
       showAlert({
         title: 'Error',
-        message: 'No se pudo exportar los datos: ' + error.message,
+        message: `No se pudo exportar los datos: ${error.message || 'Error desconocido'}`,
         type: 'error',
         buttons: [{ text: 'OK' }]
       });
@@ -211,6 +266,18 @@ const ImportExportScreen = ({ navigation }) => {
     });
   };
 
+  // Función para abrir la configuración de la app
+  const openAppSettings = () => {
+    if (Platform.OS === 'ios') {
+      Linking.openURL('app-settings:');
+    } else {
+      IntentLauncher.startActivityAsync(
+        IntentLauncher.ActivityAction.APPLICATION_DETAILS_SETTINGS,
+        { data: 'package:' + Constants.manifest.android.package }
+      );
+    }
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Importar/Exportar Datos</Text>
@@ -221,11 +288,17 @@ const ImportExportScreen = ({ navigation }) => {
           onPress={handleExport}
           disabled={isLoading}
         >
-          <Ionicons name="download-outline" size={32} color={colors.white} />
-          <Text style={styles.optionText}>Exportar Datos</Text>
-          <Text style={styles.optionDescription}>
-            Guarda tus materias, ciclos y actividades en un archivo
-          </Text>
+          {isLoading ? (
+            <ActivityIndicator size="large" color={colors.white} />
+          ) : (
+            <>
+              <Ionicons name="download-outline" size={32} color={colors.white} />
+              <Text style={styles.optionText}>Descargar Datos</Text>
+              <Text style={styles.optionDescription}>
+                Guarda tus datos como archivo JSON (tú eliges dónde)
+              </Text>
+            </>
+          )}
         </TouchableOpacity>
         
         <TouchableOpacity 
@@ -233,11 +306,17 @@ const ImportExportScreen = ({ navigation }) => {
           onPress={handleImport}
           disabled={isLoading}
         >
-          <Ionicons name="upload-outline" size={32} color={colors.white} />
-          <Text style={styles.optionText}>Importar Datos</Text>
-          <Text style={styles.optionDescription}>
-            Carga datos desde un archivo previamente exportado
-          </Text>
+          {isLoading ? (
+            <ActivityIndicator size="large" color={colors.white} />
+          ) : (
+            <>
+              <Ionicons name="upload-outline" size={32} color={colors.white} />
+              <Text style={styles.optionText}>Importar Datos</Text>
+              <Text style={styles.optionDescription}>
+                Carga datos desde un archivo previamente exportado
+              </Text>
+            </>
+          )}
         </TouchableOpacity>
         
         {/* Nuevo botón para eliminar datos */}

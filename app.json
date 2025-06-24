@@ -26,7 +26,13 @@
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.antontsp22.AppUni"
+      "package": "com.antontsp22.AppUni",
+      "permissions": [
+        "WRITE_EXTERNAL_STORAGE",
+        "READ_EXTERNAL_STORAGE",
+        "MEDIA_LIBRARY",
+        "MEDIA_LIBRARY_WRITE_ONLY"
+      ]
     },
     "web": {
       "favicon": "./assets/favicon.png"
