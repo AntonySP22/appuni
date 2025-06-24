@@ -55,6 +55,18 @@ const EditActivityScreen = ({ route, navigation }) => {
       return false;
     }
     
+    // Check if total percentage would exceed 100%
+    const course = courses.find(c => c.id === courseId);
+    if (course && course.activities) {
+      const currentTotal = course.activities.reduce((sum, act) => sum + act.percentage, 0);
+      const newTotal = currentTotal + percentageValue;
+      
+      if (newTotal > 100) {
+        Alert.alert('Error', `El total de porcentajes excedería el 100% (Total actual: ${currentTotal}%, Nuevo total: ${newTotal}%)`);
+        return false;
+      }
+    }
+    
     if (!grade.trim() || isNaN(Number(grade))) {
       Alert.alert('Error', 'La nota debe ser un número válido');
       return false;

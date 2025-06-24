@@ -305,6 +305,25 @@ export const DataProvider = ({ children }) => {
     }
   };
 
+  // Actualizar un semestre
+  const updateSemester = (semesterId, updatedData) => {
+    setSemesters(prevSemesters => 
+      prevSemesters.map(semester => 
+        semester.id === semesterId 
+          ? { 
+              ...semester, 
+              ...updatedData
+            } 
+          : semester
+      )
+    );
+  };
+
+  // Eliminar un semestre
+  const deleteSemester = (semesterId) => {
+    setSemesters(prevSemesters => prevSemesters.filter(semester => semester.id !== semesterId));
+  };
+
   const value = {
     courses,
     semesters,
@@ -314,9 +333,11 @@ export const DataProvider = ({ children }) => {
     updateCourse,
     deleteCourse,
     addActivity,
-    updateActivity, // Añadir esta línea
+    updateActivity,
     deleteActivity,
     addSemester,
+    updateSemester, // Add this new function
+    deleteSemester, // Add this new function
     loadFullData,
     updateStats, // Agregar esta función al contexto
   };

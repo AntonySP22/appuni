@@ -8,7 +8,10 @@ import {
   TouchableOpacity, 
   ActivityIndicator,
   Modal,
-  ScrollView
+  ScrollView,
+  Alert,
+  TextInput,
+  Switch // Add this import
 } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
 import { useData } from '../contexts/DataContext';
@@ -17,11 +20,27 @@ import StatsSummary from '../components/StatsSummary';
 import { colors } from '../constants/colors';
 
 const HomeScreen = ({ navigation }) => {
-  const { courses, semesters, stats, loading } = useData();
+  const { 
+    courses, 
+    semesters, 
+    stats, 
+    loading, 
+    deleteSemester, 
+    updateSemester,
+    deleteCourse, // Add this
+    updateCourse  // Add this
+  } = useData();
   const [filteredCourses, setFilteredCourses] = useState([]);
   const [filterType, setFilterType] = useState('all');
   const [selectedSemester, setSelectedSemester] = useState('all');
   const [showSemesterModal, setShowSemesterModal] = useState(false);
+  const [editingSemester, setEditingSemester] = useState(null);
+  const [editSemesterNumber, setEditSemesterNumber] = useState('');
+  const [editSemesterYear, setEditSemesterYear] = useState('');
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [semesterToDelete, setSemesterToDelete] = useState(null);
+  const [deleteAssociatedCourses, setDeleteAssociatedCourses] = useState(false);
 
   useEffect(() => {
     // Primero filtrar por semestre
@@ -65,6 +84,108 @@ const HomeScreen = ({ navigation }) => {
     }
     
     return `Ciclo ${cycleNumber} ${semester.year || ''}`;
+  };
+
+  const handleEditSemester = (semester) => {
+    setEditingSemester(semester);
+    setEditSemesterNumber(semester.number ? semester.number.toString() : '');
+    setEditSemesterYear(semester.year ? semester.year.toString() : '');
+    setShowEditModal(true);
+  };
+
+  const handleDeleteSemester = (semesterId) => {
+    // Check if there are courses associated with this semester
+    const associatedCourses = courses.filter(course => course.semesterId === semesterId);
+    const semester = semesters.find(s => s.id === semesterId);
+    
+    if (associatedCourses.length > 0) {
+      // Set the semester for deletion and show custom modal
+      setSemesterToDelete(semesterId);
+      setDeleteAssociatedCourses(false); // Default to not deleting courses
+      setShowDeleteModal(true);
+    } else {
+      // If no associated courses, confirm deletion with regular Alert
+      Alert.alert(
+        "Eliminar Ciclo",
+        "¿Estás seguro de que deseas eliminar este ciclo?",
+        [
+          { text: "Cancelar", style: "cancel" },
+          { 
+            text: "Eliminar", 
+            style: "destructive",
+            onPress: () => {
+              deleteSemester(semesterId);
+              if (selectedSemester === semesterId) {
+                setSelectedSemester('all');
+              }
+            }
+          }
+        ]
+      );
+    }
+  };
+
+  const confirmDeleteSemester = () => {
+    if (!semesterToDelete) return;
+    
+    if (deleteAssociatedCourses) {
+      // Delete all courses associated with this semester
+      const associatedCourses = courses.filter(course => course.semesterId === semesterToDelete);
+      associatedCourses.forEach(course => {
+        deleteCourse(course.id);
+      });
+    } else {
+      // Update all courses to have no semesterId
+      updateCoursesWithNoSemester(semesterToDelete);
+    }
+    
+    // Delete the semester
+    deleteSemester(semesterToDelete);
+    
+    // Update selected semester if needed
+    if (selectedSemester === semesterToDelete) {
+      setSelectedSemester('all');
+    }
+    
+    // Close the modal
+    setShowDeleteModal(false);
+    setSemesterToDelete(null);
+  };
+  
+  const updateCoursesWithNoSemester = (semesterId) => {
+    // Get all courses for this semester
+    const semesterCourses = courses.filter(course => course.semesterId === semesterId);
+    
+    // Update each course to have no semester
+    semesterCourses.forEach(course => {
+      updateCourse(course.id, { semesterId: '' });
+    });
+  };
+
+  const saveEditedSemester = () => {
+    if (!editingSemester) return;
+    
+    const number = parseInt(editSemesterNumber);
+    const year = parseInt(editSemesterYear);
+    
+    if (isNaN(number)) {
+      Alert.alert("Error", "El número de ciclo debe ser un número válido");
+      return;
+    }
+    
+    if (isNaN(year)) {
+      Alert.alert("Error", "El año debe ser un número válido");
+      return;
+    }
+    
+    updateSemester(editingSemester.id, {
+      number: number,
+      year: year,
+      name: `Ciclo ${number}`
+    });
+    
+    setShowEditModal(false);
+    setEditingSemester(null);
   };
 
   if (loading) {
@@ -141,30 +262,158 @@ const HomeScreen = ({ navigation }) => {
                   }
                   
                   return (
-                    <TouchableOpacity 
-                      key={semester.id}
-                      style={[
-                        styles.semesterOption, 
-                        selectedSemester === semester.id && styles.activeSemesterOption
-                      ]} 
-                      onPress={() => {
-                        setSelectedSemester(semester.id);
-                        setShowSemesterModal(false);
-                      }}
-                    >
-                      <Text style={selectedSemester === semester.id ? styles.activeSemesterText : styles.semesterText}>
-                        Ciclo {cycleNumber} {semester.year || ''}
-                      </Text>
-                      {selectedSemester === semester.id && (
-                        <Ionicons name="checkmark" size={20} color={colors.primary} />
-                      )}
-                    </TouchableOpacity>
+                    <View key={semester.id} style={styles.semesterRow}>
+                      <TouchableOpacity 
+                        style={[
+                          styles.semesterOption, 
+                          selectedSemester === semester.id && styles.activeSemesterOption,
+                          { flex: 1 }
+                        ]} 
+                        onPress={() => {
+                          setSelectedSemester(semester.id);
+                          setShowSemesterModal(false);
+                        }}
+                      >
+                        <Text style={selectedSemester === semester.id ? styles.activeSemesterText : styles.semesterText}>
+                          Ciclo {cycleNumber} {semester.year || ''}
+                        </Text>
+                        {selectedSemester === semester.id && (
+                          <Ionicons name="checkmark" size={20} color={colors.primary} />
+                        )}
+                      </TouchableOpacity>
+                      
+                      <View style={styles.semesterActions}>
+                        <TouchableOpacity
+                          style={styles.actionButton}
+                          onPress={() => handleEditSemester(semester)}
+                        >
+                          <Ionicons name="pencil-outline" size={18} color={colors.secondary} />
+                        </TouchableOpacity>
+                        
+                        <TouchableOpacity
+                          style={styles.actionButton}
+                          onPress={() => handleDeleteSemester(semester.id)}
+                        >
+                          <Ionicons name="trash-outline" size={18} color={colors.danger} />
+                        </TouchableOpacity>
+                      </View>
+                    </View>
                   );
                 })}
               </ScrollView>
             </View>
           </View>
         </TouchableOpacity>
+      </Modal>
+      
+      {/* Modal para editar ciclo */}
+      <Modal
+        visible={showEditModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowEditModal(false)}
+      >
+        <TouchableOpacity 
+          style={styles.modalOverlay}
+          activeOpacity={1}
+          onPress={() => setShowEditModal(false)}
+        >
+          <View style={styles.modalContainer}>
+            <View style={styles.modalContent}>
+              <Text style={styles.modalTitle}>Editar Ciclo</Text>
+              
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Número de Ciclo</Text>
+                <TextInput
+                  style={styles.input}
+                  value={editSemesterNumber}
+                  onChangeText={setEditSemesterNumber}
+                  keyboardType="numeric"
+                  maxLength={2}
+                />
+              </View>
+              
+              <View style={styles.inputGroup}>
+                <Text style={styles.inputLabel}>Año</Text>
+                <TextInput
+                  style={styles.input}
+                  value={editSemesterYear}
+                  onChangeText={setEditSemesterYear}
+                  keyboardType="numeric"
+                  maxLength={4}
+                />
+              </View>
+              
+              <View style={styles.buttonRow}>
+                <TouchableOpacity 
+                  style={[styles.button, styles.cancelButton]}
+                  onPress={() => setShowEditModal(false)}
+                >
+                  <Text style={styles.buttonText}>Cancelar</Text>
+                </TouchableOpacity>
+                
+                <TouchableOpacity 
+                  style={[styles.button, styles.saveButton]}
+                  onPress={saveEditedSemester}
+                >
+                  <Text style={styles.buttonText}>Guardar</Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </View>
+        </TouchableOpacity>
+      </Modal>
+      
+      {/* Custom Delete Confirmation Modal */}
+      <Modal
+        visible={showDeleteModal}
+        transparent={true}
+        animationType="fade"
+        onRequestClose={() => setShowDeleteModal(false)}
+      >
+        <View style={styles.modalOverlay}>
+          <View style={styles.deleteModalContainer}>
+            <Text style={styles.deleteModalTitle}>Eliminar Ciclo</Text>
+            
+            <Text style={styles.deleteModalText}>
+              ¿Estás seguro de que deseas eliminar este ciclo?
+            </Text>
+            
+            <View style={styles.checkboxContainer}>
+              <Switch
+                value={deleteAssociatedCourses}
+                onValueChange={setDeleteAssociatedCourses}
+                trackColor={{ false: colors.lightGray, true: colors.danger }}
+                thumbColor={deleteAssociatedCourses ? colors.danger : colors.gray}
+              />
+              <Text style={styles.checkboxLabel}>
+                Eliminar también las materias asociadas a este ciclo
+              </Text>
+            </View>
+            
+            <Text style={styles.warningText}>
+              {deleteAssociatedCourses 
+                ? "Las materias asociadas a este ciclo se eliminarán permanentemente." 
+                : "Las materias asociadas a este ciclo quedarán sin asignación de ciclo."}
+            </Text>
+            
+            <View style={styles.buttonRow}>
+              <TouchableOpacity 
+                style={[styles.button, styles.cancelButton]}
+                onPress={() => setShowDeleteModal(false)}
+              >
+                <Text style={styles.cancelButtonText}>Cancelar</Text>
+              </TouchableOpacity>
+              
+              <TouchableOpacity 
+                style={[styles.button, styles.deleteButton]}
+                onPress={confirmDeleteSemester}
+              >
+                <Text style={styles.deleteButtonText}>Eliminar</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+        </View>
       </Modal>
       
       <View style={styles.filterContainer}>
@@ -364,6 +613,128 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: 'normal', // cambiado de 'bold' a 'normal'
     fontSize: 16,
+  },
+  // Nuevos estilos para fila de ciclos y acciones
+  semesterRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    borderBottomWidth: 1,
+    borderBottomColor: colors.lightGray,
+  },
+  semesterActions: {
+    flexDirection: 'row',
+    paddingRight: 4,
+  },
+  actionButton: {
+    padding: 8,
+    marginLeft: 4,
+  },
+  // Estilos para el modal de edición
+  inputGroup: {
+    marginBottom: 16,
+  },
+  inputLabel: {
+    fontSize: 14,
+    color: colors.darkGray,
+    marginBottom: 8,
+  },
+  input: {
+    backgroundColor: colors.lightGray,
+    borderRadius: 8,
+    padding: 12,
+    fontSize: 16,
+    color: colors.darkText,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 16,
+  },
+  button: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginHorizontal: 4,
+  },
+  cancelButton: {
+    backgroundColor: colors.lightGray,
+  },
+  saveButton: {
+    backgroundColor: colors.primary,
+  },
+  buttonText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: 'white',
+  },
+  // Styles for delete confirmation modal
+  deleteModalContainer: {
+    backgroundColor: 'white',
+    borderRadius: 12,
+    padding: 20,
+    width: '85%',
+    maxWidth: 400,
+  },
+  deleteModalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    color: colors.danger,
+    marginBottom: 12,
+    textAlign: 'center',
+  },
+  deleteModalText: {
+    fontSize: 16,
+    marginBottom: 16,
+    color: colors.darkText,
+    textAlign: 'center',
+  },
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginVertical: 16,
+    paddingVertical: 8,
+    paddingHorizontal: 12,
+    backgroundColor: colors.lightGray,
+    borderRadius: 8,
+  },
+  checkboxLabel: {
+    fontSize: 14,
+    color: colors.darkText,
+    marginLeft: 12,
+    flex: 1,
+  },
+  warningText: {
+    fontSize: 13,
+    color: colors.danger,
+    fontStyle: 'italic',
+    marginBottom: 16,
+  },
+  buttonRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 8,
+  },
+  button: {
+    flex: 1,
+    padding: 12,
+    borderRadius: 8,
+    alignItems: 'center',
+    marginHorizontal: 4,
+  },
+  cancelButton: {
+    backgroundColor: colors.lightGray,
+  },
+  deleteButton: {
+    backgroundColor: colors.danger,
+  },
+  cancelButtonText: {
+    color: colors.darkText,
+    fontWeight: 'bold',
+  },
+  deleteButtonText: {
+    color: 'white',
+    fontWeight: 'bold',
   },
   // Resto de estilos existentes
   listContainer: {

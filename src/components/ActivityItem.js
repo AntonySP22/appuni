@@ -70,7 +70,7 @@ const ActivityItem = ({ activity, onDelete, onEdit }) => {
             styles.gradeValue, 
             { color: getGradeColor(activity.grade) }
           ]}>
-            {(activity.grade || 0).toFixed(1)}
+            {(activity.grade || 0).toFixed(2)}
           </Text>
           <Text style={styles.gradeLabel}>Nota</Text>
         </View>
